@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     }
     
     // 验证签名
-    const message = "login LxDao";
+    const message = "login Oneblock";
     const isValidSignature = await verifyMessage({
       address: address as `0x${string}`,
       message,

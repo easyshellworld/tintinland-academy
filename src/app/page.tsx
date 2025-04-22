@@ -32,7 +32,7 @@ export default function Home() {
           // Update state to show signing in progress
           setAuthState('signing');
           
-          const message = "login LxDao";
+          const message = "login Oneblock";
           const signature = await signMessageAsync({ message });
           
           // Update state to show authentication in progress

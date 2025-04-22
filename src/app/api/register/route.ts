@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import {  AuthFile, addAuth } from '@/lib/github'; // 假设您的 github.ts 文件位于 lib 目录下
+import {  AuthFile, addAuth } from '@/lib/github'; 
 
 export async function POST(request: Request) {
   try {
