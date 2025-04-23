@@ -4,19 +4,26 @@ import db from '../index';
 type AuthResult = {
   success: boolean;
   role?: string;
+  id?:string;
+  
 };
 
 export function checkWalletAuth(walletAddress: string): AuthResult {
-  const staff = db.prepare('SELECT role FROM staff WHERE wallet_address = ?').get(walletAddress) as { role: string } | undefined;
+  const staff = db.prepare('SELECT role,id FROM staff WHERE wallet_address = ?').get(walletAddress) as { role: string,id:string } | undefined;
 
   if (staff) {
-    return { success: true, role: staff.role };
+    return { success: true, role: staff.role,id:staff.id};
   }
 
-  const student = db.prepare('SELECT role FROM registrations WHERE wallet_address = ?').get(walletAddress) ;
-
+  const student = db.prepare('SELECT approved,student_id FROM registrations WHERE wallet_address = ?').get(walletAddress)  as { approved: number,student_id:string } | undefined;
+  //onsole.log(student)
   if (student) {
-    return { success: true, role: "student" };
+    if(student.approved===1){
+      return { success: true, role: "student",id:student.student_id};
+    }else if(student.approved===0){
+      return { success: true, role: "pending" };
+    }
+    
   }
 
   return { success: false };

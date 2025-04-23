@@ -1,7 +1,7 @@
 // app/api/auth/signin/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { verifyMessage } from "viem";
-import { AuthFile } from "@/lib/github";
+import { checkWalletAuth } from "@/lib/db/query/authdb";
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,19 +24,20 @@ export async function POST(req: NextRequest) {
     }
     
     // 检查用户是否存在及其状态
-    const registertext = await AuthFile("data/register.json");
-    const registerData=JSON.parse(registertext)
-    const user = registerData[address];
+    const registertext =checkWalletAuth(address);
     
-    if (!user) {
+    const user = registertext
+    //console.log(user)
+    
+    if (user.success === false) {
       return NextResponse.json({ status: "not_found" });
     }
     
-    if (user.approvalStatus === "approved") {
+    if (user.success === true && user.role==="student") {
       return NextResponse.json({ status: "approved", token: true });
-    } else if (user.approvalStatus === "pending") {
+    } else if (user.success === true && user.role==="pending") {
       return NextResponse.json({ status: "pending" });
-    } else if (user.approvalStatus === "rejected") {
+    } else if (user.success === true ) {
       return NextResponse.json({ status: "rejected" });
     } else {
       return NextResponse.json({ status: "unknown" });

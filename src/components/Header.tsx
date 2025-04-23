@@ -8,13 +8,13 @@ import { useRouter } from "next/navigation";
 import { useLearning } from "@/components/LearningContext";
 import { useEffect, useState } from "react";
 
-const getTitle =()=> process.env.NEXT_PUBLIC_ITEM_TITLE  || "LXdao 学习系统";
+const getTitle = () => process.env.NEXT_PUBLIC_ITEM_TITLE || "LXdao 学习系统";
 
 export function Header() {
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const router = useRouter();
-  const {  setActiveView } = useLearning();
+  const { setActiveView } = useLearning();
 
   const [title, setTitle] = useState("");
 
@@ -45,12 +45,7 @@ export function Header() {
           <h1 className="text-2xl font-bold ml-2">{title}</h1>
         </div>
         <nav className="flex items-center space-x-4">
-          <button
-            onClick={() => setActiveView("editor")}
-            className="px-4 py-2 text-blue-600 border border-blue-600 rounded-md hover:bg-blue-100 transition-colors duration-200"
-          >
-            编辑笔记
-          </button>
+
           <button
             onClick={() => setActiveView("materials")}
             className="px-4 py-2 text-blue-600 border border-blue-600 rounded-md hover:bg-blue-100 transition-colors duration-200"
@@ -61,13 +56,19 @@ export function Header() {
             onClick={() => setActiveView("table")}
             className="px-4 py-2 text-blue-600 border border-blue-600 rounded-md hover:bg-blue-100 transition-colors duration-200"
           >
-            学习进度表
+            作业答题卡
+          </button>
+          <button
+            onClick={() => setActiveView("editor")}
+            className="px-4 py-2 text-blue-600 border border-blue-600 rounded-md hover:bg-blue-100 transition-colors duration-200"
+          >
+            编辑笔记
           </button>
           <button
             onClick={() => setActiveView("list")}
             className="px-4 py-2 text-blue-600 border border-blue-600 rounded-md hover:bg-blue-100 transition-colors duration-200"
           >
-            共学笔记
+            学习笔记
           </button>
           {isConnected && (
             <Button

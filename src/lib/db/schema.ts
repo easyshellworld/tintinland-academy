@@ -28,8 +28,8 @@ export function initTables() {
       wants_private_service BOOLEAN NOT NULL,
       referrer TEXT NOT NULL,
       wallet_address TEXT NOT NULL,
-      student_id TEXT NOT NULL UNIQUE,  -- 学号
-      approved BOOLEAN DEFAULT 0        -- 是否审核通过
+      student_id TEXT NOT NULL UNIQUE,  
+      approved BOOLEAN DEFAULT 0         
     );
 
     CREATE TABLE IF NOT EXISTS tasks (

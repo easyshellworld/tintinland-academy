@@ -1,36 +1,73 @@
+// src/app/api/register/route.ts
 import { NextResponse } from 'next/server';
-import {  AuthFile, addAuth } from '@/lib/github'; 
+import { addRegistration, Registration } from '@/lib/db/query/registrations';
 
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-    const { address, name, email, timezone, bio } = data;
+    const {
+      name,
+      wechatId,
+      phone,
+      email,
+      gender,
+      ageGroup,
+      education,
+      university,
+      major,
+      city,
+      status,
+      languages,
+      experience,
+      source,
+      participated,
+      dailyTime,
+      interests,
+      platforms,
+      hackathon,
+      leadership,
+      privateMsg,
+      inviter,
+      address,
+      studentId,
+    } = data;
 
+    // 校验必填字段
     if (!address || !name || !email) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
-    const registerData = {
-      address,
-      name,
+    // 构造注册对象
+    const reg: Registration = {
+      student_name: name,
+      wechat_id: wechatId,
+      phone,
       email,
-      timezone,
-      bio,
-      approvalStatus: 'pending', // 默认状态为 pending
+      gender,
+      age_group: ageGroup,
+      education,
+      university,
+      major,
+      city,
+      role: Array.isArray(status) ? status.join(',') : status,
+      languages: Array.isArray(languages) ? languages.join(',') : languages,
+      experience,
+      source,
+      has_web3_experience: participated === '是',
+      study_time: dailyTime,
+      interests,
+      platforms,
+      willing_to_hackathon: hackathon === '愿意',
+      willing_to_lead: leadership === '是',
+      wants_private_service: privateMsg === '是',
+      referrer: inviter,
+      wallet_address: address,
+      student_id: studentId,
+      approved: false,
     };
 
-    const registerFilePath = 'data/register.json'; // 注册信息存储路径
-
-    // 读取现有的注册信息
-    const existingRegisters = await  AuthFile(registerFilePath);
-    const registers = existingRegisters ? JSON.parse(existingRegisters) : [];
-
-    // 添加新的注册信息
-        
-    registers[registerData.address] = registerData
-
-    // 将更新后的注册信息写入文件
-    await addAuth(registerFilePath, JSON.stringify(registers, null, 2), `Add register for ${address}`);
+    // 写入数据库
+    addRegistration(reg);
 
     return NextResponse.json({ message: 'Registration successful' });
   } catch (error) {

@@ -61,25 +61,28 @@ export default function Register() {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value, type, checked } = e.target;
-
+    const target = e.target as HTMLInputElement;
+    const { name, value, type } = target;
+  
     if (type === 'checkbox') {
       setFormData((prev) => {
         const list = new Set(prev[name as keyof typeof prev] as string[]);
+        const checked = target.checked;
         if (checked) list.add(value);
         else list.delete(value);
         return {
           ...prev,
-          [name]: Array.from(list)
+          [name]: Array.from(list),
         };
       });
     } else {
       setFormData((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
     }
   };
+  
 
   const handleGetCity = async () => {
     const city = await getCurrentCity();

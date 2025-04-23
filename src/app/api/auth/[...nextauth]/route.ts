@@ -1,7 +1,7 @@
 // app/api/auth/[...nextauth]/route.ts
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { AuthFile } from "@/lib/github";
+import { checkWalletAuth } from "@/lib/db/query/authdb";
 import { verifyMessage } from "viem";
 
 const handler = NextAuth({
@@ -18,26 +18,20 @@ const handler = NextAuth({
             return null;
           }
 
-          const registertext = await AuthFile("data/register.json");
+          const registertext = checkWalletAuth(credentials.address);
           if (!registertext) {
-            console.error("Failed to load register.json");
+            console.error("Failed to load register");
             return null;
           }
 
-          let registerData;
-          try {
-            registerData = JSON.parse(registertext);
-          } catch (error) {
-            console.error("Invalid JSON format in register.json:", error);
-            return null;
-          }
+     
 
-          const user = registerData[credentials.address];
+          const user = registertext;
           if (!user) {
             return null;
           }
 
-          const message = "login LxDao";
+          const message = "login Oneblock";
           const isValidSignature = verifyMessage({
             address: credentials.address as `0x${string}`,
             message,
@@ -48,11 +42,12 @@ const handler = NextAuth({
             return null;
           }
 
-          if (user.approvalStatus === "approved") {
+          if (user.success === true) {
             return {
-              id: credentials.address,
+              id: user.id!,
               address: credentials.address,
               status: "approved",
+              role: user.role ?? "user"
             };
           }
 
@@ -67,16 +62,20 @@ const handler = NextAuth({
   callbacks: {
     jwt: async ({ token, user }) => {
       if (user && "address" in user && "status" in user) {
+        token.id=user.id as string;
         token.address = user.address as string;
         token.status = user.status as string;
+        token.role=user.role as string;
       }
       return token;
     },
     session: async ({ session, token }) => {
       if (session.user) {
-        const user = session.user as unknown as { address: string; status: string };
+        const user = session.user as unknown as { id:string; address: string;role:string; status: string };
+        user.id=token.id as string;
         user.address = token.address as string;
         user.status = token.status as string;
+        user.role =token.role as string;
       }
       return session;
     },
@@ -84,4 +83,4 @@ const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
 });
 
-export { handler as GET, handler as POST };
+export { handler as GET, handler as POST }; 
