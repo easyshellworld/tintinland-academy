@@ -41,7 +41,7 @@ export function Header() {
     <header className="sticky top-0 bg-white border-b z-50 py-4">
       <div className="container flex flex-col items-center">
         <div className="flex items-center justify-center mb-2">
-          <Image src="/logo.webp" alt="LxDao Logo" width={40} height={40} />
+          <Image src="/logo.png" alt="LxDao Logo" width={40} height={40} />
           <h1 className="text-2xl font-bold ml-2">{title}</h1>
         </div>
         <nav className="flex items-center space-x-4">

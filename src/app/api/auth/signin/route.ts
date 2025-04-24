@@ -33,9 +33,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ status: "not_found" });
     }
     
-    if (user.success === true && user.role==="student") {
+    if (user.success === true && user.role==="student" ) {
       return NextResponse.json({ status: "approved", token: true });
-    } else if (user.success === true && user.role==="pending") {
+    } else if (user.success === true && user.role==="admin") {
+      return NextResponse.json({ status: "approved", token: true });
+    }
+      else if (user.success === true && user.role==="pending") {
       return NextResponse.json({ status: "pending" });
     } else if (user.success === true ) {
       return NextResponse.json({ status: "rejected" });

@@ -29,7 +29,9 @@ export function initTables() {
       referrer TEXT NOT NULL,
       wallet_address TEXT NOT NULL,
       student_id TEXT NOT NULL UNIQUE,  
-      approved BOOLEAN DEFAULT 0         
+      approved BOOLEAN DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME         
     );
 
     CREATE TABLE IF NOT EXISTS tasks (
@@ -48,6 +50,8 @@ export function initTables() {
       task5_practice_score INTEGER DEFAULT 0,
       task6_choice_score INTEGER DEFAULT 0,
       task6_practice_score INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME      
       FOREIGN KEY (student_id) REFERENCES registrations(student_id)
     );
 
@@ -58,7 +62,9 @@ export function initTables() {
       question_text TEXT NOT NULL,            -- 题目内容
       options TEXT NOT NULL,                  -- JSON 字符串，包含 A/B/C/D 选项，前端解析
       correct_option TEXT NOT NULL,           -- 正确选项（如 'B'）
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      score: INTEGER NOT NULL, 
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME      
     );
 
     CREATE TABLE IF NOT EXISTS course_contents (
@@ -68,7 +74,8 @@ export function initTables() {
       task_number INTEGER,                   -- 可选，关联任务编号（Task1 ~ Task6）
       content_markdown TEXT NOT NULL,        -- Markdown 内容
       is_pinned BOOLEAN DEFAULT 0,           -- 是否置顶（可选）
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME  
     );
 
     CREATE TABLE IF NOT EXISTS student_notes (
@@ -79,17 +86,19 @@ export function initTables() {
       content_markdown TEXT NOT NULL,       
       task_number INTEGER,                  
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME,  
       FOREIGN KEY (student_id) REFERENCES registrations(student_id)
     );
     CREATE TABLE IF NOT EXISTS staff (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,                 -- 姓名
-      wechat_id TEXT NOT NULL UNIQUE,         -- 邮箱（用于联系或展示）
+      wechat_id TEXT NOT NULL UNIQUE,         -- 微信id（用于联系或展示）
       phone TEXT,                         -- 联系方式（可选）
       role TEXT NOT NULL CHECK (role IN ('admin', 'teacher', 'assistant')), -- 角色限定
       wallet_address TEXT NOT NULL UNIQUE, -- 钱包地址
       approved BOOLEAN DEFAULT 1,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME  
     );
 
   `);

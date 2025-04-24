@@ -98,7 +98,7 @@ export default function Home() {
           <div className="flex flex-col items-center justify-center min-h-screen">
             <div className="mb-4">
               <Image
-                src="/logo.webp"
+                src="/logo.png"
                 alt="LXDao Logo"
                 width={96}
                 height={96}

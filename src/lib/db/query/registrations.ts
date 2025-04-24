@@ -1,6 +1,10 @@
+// ./src/lib/db/query/registrations.ts
 import db from '@/lib/db';
 
+
+const now = new Date().toISOString(); // 当前时间字符串
 export interface Registration {
+  id:number;
   student_name: string;
   wechat_id: string;
   phone: string;
@@ -26,7 +30,12 @@ export interface Registration {
   wallet_address: string;
   student_id?: string;
   approved?: boolean;
+  created_at?: string;
+  updated_at?:string;
+
 }
+
+
 
 export function addRegistration(reg: Omit<Registration, 'student_id'>) {
   // 查询当前最大 student_id（转为整数）
@@ -46,13 +55,13 @@ export function addRegistration(reg: Omit<Registration, 'student_id'>) {
       university, major, city, role, languages, experience, source,
       has_web3_experience, study_time, interests, platforms,
       willing_to_hackathon, willing_to_lead, wants_private_service,
-      referrer, wallet_address, student_id, approved
+      referrer, wallet_address, student_id, approved，created_at, updated_at
     ) VALUES (
       @student_name, @wechat_id, @phone, @email, @gender, @age_group, @education,
       @university, @major, @city, @role, @languages, @experience, @source,
       @has_web3_experience, @study_time, @interests, @platforms,
       @willing_to_hackathon, @willing_to_lead, @wants_private_service,
-      @referrer, @wallet_address, @student_id, @approved
+      @referrer, @wallet_address, @student_id, @approved，@created_at, @updated_at
     )`
   );
 
@@ -64,7 +73,83 @@ export function addRegistration(reg: Omit<Registration, 'student_id'>) {
     willing_to_lead: reg.willing_to_lead ? 1 : 0,
     wants_private_service: reg.wants_private_service ? 1 : 0,
     approved: reg.approved ? 1 : (reg.approved === false ? 0 : undefined),
+    created_at: now,
+    updated_at: now,
   };
 
   stmt.run(params);
 }
+
+
+// 更新注册信息的审核状态
+export function updateApprovalStatus(id: number, approved: boolean) {
+  const now = new Date().toISOString();
+  const stmt = db.prepare('UPDATE registrations SET approved = ?, updated_at = ? WHERE id = ?');
+  
+  try {
+    const result = stmt.run(approved ? 1 : 0, now, id);
+    return { success: true, changes: result.changes };
+  } catch (error) {
+    return { success: false, error };
+  }
+}
+
+// 更新注册信息
+export function updateRegistration(id: number, updates: Partial<Registration>) {
+  // 防止更新id和student_id字段
+  const safeUpdates = { ...updates };
+  delete safeUpdates.id;
+  delete safeUpdates.student_id;
+  
+  // 构建更新语句
+  const keys = Object.keys(safeUpdates);
+  if (keys.length === 0) return { success: false, error: 'No fields to update' };
+  
+  const setClause = keys.map(key => `${key} = ?`).join(', ');
+  const now = new Date().toISOString();
+  
+  const stmt = db.prepare(`UPDATE registrations SET ${setClause}, updated_at = ? WHERE id = ?`);
+  
+  // 准备参数
+  const values = [...Object.values(safeUpdates), now, id];
+  
+  try {
+    const result = stmt.run(...values);
+    return { success: true, changes: result.changes };
+  } catch (error) {
+    return { success: false, error };
+  }
+}
+
+// 删除注册信息
+export function deleteRegistration(id: number) {
+  const stmt = db.prepare('DELETE FROM registrations WHERE id = ?');
+  
+  try {
+    const result = stmt.run(id);
+    return { success: true, changes: result.changes };
+  } catch (error) {
+    return { success: false, error };
+  }
+}
+
+
+// 获取所有注册信息
+export function getAllRegistrations() {
+  return db.prepare('SELECT * FROM registrations ORDER BY created_at DESC').all();
+}
+
+// 根据ID获取单个注册信息
+export function getRegistrationById(id: number) {
+  return db.prepare('SELECT * FROM registrations WHERE id = ?').get(id);
+}
+
+// 根据student_id获取注册信息
+export function getRegistrationByStudentId(studentId: string){
+  return db.prepare('SELECT * FROM registrations WHERE student_id = ?').get(studentId) as Registration;
+}
+// 获取已审核或未审核的注册信息
+export function getRegistrationsByApprovalStatus(approved: boolean) {
+  return db.prepare('SELECT * FROM registrations WHERE approved = ? ORDER BY created_at DESC').all(approved ? 1 : 0);
+}
+

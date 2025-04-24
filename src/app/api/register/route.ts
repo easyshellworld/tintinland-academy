@@ -6,6 +6,7 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
     const {
+    
       name,
       wechatId,
       phone,
@@ -39,6 +40,7 @@ export async function POST(request: Request) {
 
     // 构造注册对象
     const reg: Registration = {
+
       student_name: name,
       wechat_id: wechatId,
       phone,
