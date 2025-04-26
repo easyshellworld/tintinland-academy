@@ -1,3 +1,4 @@
+//./src/app/api/admin/registrationsadmin/router.ts
 import { NextResponse } from 'next/server';
 import {
   getAllRegistrations,
