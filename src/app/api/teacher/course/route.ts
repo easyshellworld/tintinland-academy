@@ -1,4 +1,4 @@
-// ./src/app/api/teacher/course/router.ts
+// ./src/app/api/teacher/course/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import {
   addCourseContent,
@@ -33,6 +33,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: false, message: '未知操作类型' }, { status: 400 });
   } catch (error) {
-    return NextResponse.json({ success: false, error }, { status: 500 });
+    return NextResponse.json({ success: false, message: (error as Error).message }, { status: 500 });
   }
 }

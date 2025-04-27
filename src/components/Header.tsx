@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useLearning } from "@/components/LearningContext";
 import { useEffect, useState } from "react";
 
-const getTitle = () => process.env.NEXT_PUBLIC_ITEM_TITLE || "LXdao 学习系统";
+const getTitle = () => process.env.NEXT_PUBLIC_ITEM_TITLE || "oneblock academy";
 
 export function Header() {
   const { isConnected } = useAccount();

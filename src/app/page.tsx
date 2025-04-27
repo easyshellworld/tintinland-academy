@@ -99,7 +99,7 @@ export default function Home() {
             <div className="mb-4">
               <Image
                 src="/logo.png"
-                alt="LXDao Logo"
+                alt="oneblock Logo"
                 width={96}
                 height={96}
                 priority

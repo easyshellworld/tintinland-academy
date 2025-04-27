@@ -7,7 +7,7 @@ export interface CourseContent {
   type: 'announcement' | 'resource';
   task_number?: number;
   content_markdown: string;
-  is_pinned?: boolean;
+  is_pinned?:  0 | 1;
   created_at?: string;
   updated_at?: string;
 }
@@ -23,7 +23,16 @@ export function addCourseContent(content: Omit<CourseContent, 'id' | 'created_at
     INSERT INTO course_contents (title, type, task_number, content_markdown, is_pinned, created_at, updated_at)
     VALUES (@title, @type, @task_number, @content_markdown, @is_pinned, @created_at, @updated_at)
   `);
-  stmt.run({ ...content, created_at: now(), updated_at: now() });
+
+  stmt.run({
+    title: content.title,
+    type: content.type,
+    task_number: content.task_number ?? null, // 如果没有传，就插入 null
+    content_markdown: content.content_markdown,
+    is_pinned: content.is_pinned ? 1 : 0,      // boolean转成 1 或 0
+    created_at: now(),
+    updated_at: now()
+  });
 }
 
 export function updateCourseContent(

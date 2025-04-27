@@ -28,7 +28,7 @@ export function addStaff(staff: Omit<Staff, 'id' | 'created_at' | 'updated_at'>)
     staff.phone,
     staff.role,
     staff.wallet_address,
-    staff.approved ?? true
+    staff.approved !== false ? 1 : 0 
   );
 }
 

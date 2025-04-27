@@ -34,26 +34,51 @@ export function initTables() {
       updated_at DATETIME         
     );
 
-    CREATE TABLE IF NOT EXISTS tasks (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      student_id TEXT NOT NULL,
-      student_name TEXT NOT NULL,
-      task1_choice_score INTEGER DEFAULT 0,
-      task1_practice_score INTEGER DEFAULT 0,
-      task2_choice_score INTEGER DEFAULT 0,
-      task2_practice_score INTEGER DEFAULT 0,
-      task3_choice_score INTEGER DEFAULT 0,
-      task3_practice_score INTEGER DEFAULT 0,
-      task4_choice_score INTEGER DEFAULT 0,
-      task4_practice_score INTEGER DEFAULT 0,
-      task5_choice_score INTEGER DEFAULT 0,
-      task5_practice_score INTEGER DEFAULT 0,
-      task6_choice_score INTEGER DEFAULT 0,
-      task6_practice_score INTEGER DEFAULT 0,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME      
-      FOREIGN KEY (student_id) REFERENCES registrations(student_id)
-    );
+CREATE TABLE IF NOT EXISTS tasks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  student_id TEXT NOT NULL,
+  student_name TEXT NOT NULL,
+
+  task1_choice_score INTEGER DEFAULT 0,
+  task1_practice_score INTEGER DEFAULT 0,
+  task2_choice_score INTEGER DEFAULT 0,
+  task2_practice_score INTEGER DEFAULT 0,
+  task3_choice_score INTEGER DEFAULT 0,
+  task3_practice_score INTEGER DEFAULT 0,
+  task4_choice_score INTEGER DEFAULT 0,
+  task4_practice_score INTEGER DEFAULT 0,
+  task5_choice_score INTEGER DEFAULT 0,
+  task5_practice_score INTEGER DEFAULT 0,
+  task6_choice_score INTEGER DEFAULT 0,
+  task6_practice_score INTEGER DEFAULT 0,
+
+  -- 新增：每个任务的选择题完成标志，BOOLEAN本质是INTEGER
+  task1_choice_completed BOOLEAN DEFAULT 0,
+  task2_choice_completed BOOLEAN DEFAULT 0,
+  task3_choice_completed BOOLEAN DEFAULT 0,
+  task4_choice_completed BOOLEAN DEFAULT 0,
+  task5_choice_completed BOOLEAN DEFAULT 0,
+  task6_choice_completed BOOLEAN DEFAULT 0,
+
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME,
+
+  FOREIGN KEY (student_id) REFERENCES registrations(student_id)
+);
+
+
+CREATE TABLE IF NOT EXISTS task_scores (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  student_id TEXT NOT NULL,
+  task_number INTEGER NOT NULL,   -- 任务编号 Task1 ~ Task6
+  score_type TEXT NOT NULL CHECK (score_type IN ('choice', 'practice')),      -- 'choice' 或 'practice'
+  score INTEGER DEFAULT 0,
+  completed BOOLEAN DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME,
+  FOREIGN KEY (student_id) REFERENCES registrations(student_id)
+);
+
 
     CREATE TABLE IF NOT EXISTS choice_questions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
