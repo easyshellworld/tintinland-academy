@@ -1,3 +1,4 @@
+// ./src/components/teacher/AnnouncementManagement.tsx
 'use client';
 
 import { useState, useEffect } from 'react';

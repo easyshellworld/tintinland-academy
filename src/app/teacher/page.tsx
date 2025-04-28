@@ -5,6 +5,8 @@ import { AdminProvider, useAdmin } from "@/components/AdminContext";
 import { AdminHeader } from "@/components/teacher/TeacherHeader";
 import { AnnouncementManagement } from "@/components/teacher/AnnouncementManagement"
 import { AnswerCardManagement } from "@/components/teacher/AnswerCardManagement";
+import { GradeManagement } from "@/components/teacher/GradeManagement"
+import { NotesManagement } from "@/components/teacher/NotesManagement"
 
 /* 
 import { ResourceManagement } from "@/components/admin/ResourceManagement";
@@ -23,10 +25,10 @@ function AdminContent() {
         return <AnnouncementManagement />;
       case "answers":
         return <AnswerCardManagement />;
-/*       case "grades":
+      case "grades":
         return <GradeManagement />;
-      case "certificates":
-        return <CertificateGeneration />;   */
+      case "notes":
+        return <NotesManagement />;  
       default:
         return <div>请选择一个管理功能</div>;
     }

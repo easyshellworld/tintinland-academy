@@ -7,7 +7,7 @@ export type AdminView =
   | "students" 
   | "staff" 
   | "announcements" 
-  | "resources" 
+  | "notes" 
   | "answers" 
   | "grades" 
   | "certificates";

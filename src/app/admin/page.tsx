@@ -5,6 +5,10 @@ import { AdminProvider, useAdmin } from "@/components/AdminContext";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { StudentManagement } from "@/components/admin/StudentManagement";
 import { StaffManagement } from "@/components/admin/StaffManagement";
+import { AnnouncementManagement } from "@/components/teacher/AnnouncementManagement"
+import { AnswerCardManagement } from "@/components/teacher/AnswerCardManagement";
+import { GradeManagement } from "@/components/teacher/GradeManagement"
+import { NotesManagement } from "@/components/teacher/NotesManagement"
 /* import { AnnouncementManagement } from "@/components/admin/AnnouncementManagement";
 import { ResourceManagement } from "@/components/admin/ResourceManagement";
 import { AnswerCardManagement } from "@/components/admin/AnswerCardManagement";
@@ -20,18 +24,26 @@ function AdminContent() {
     switch (activeView) {
       case "students":
         return <StudentManagement />;
-     case "staff":
+      case "staff":
         return <StaffManagement />;
-     /*  case "announcements":
+      case "announcements":
         return <AnnouncementManagement />;
-      case "resources":
-        return <ResourceManagement />;
       case "answers":
         return <AnswerCardManagement />;
       case "grades":
         return <GradeManagement />;
-      case "certificates":
-        return <CertificateGeneration />;  */
+      case "notes":
+        return <NotesManagement />;
+      /*  case "announcements":
+         return <AnnouncementManagement />;
+       case "resources":
+         return <ResourceManagement />;
+       case "answers":
+         return <AnswerCardManagement />;
+       case "grades":
+         return <GradeManagement />;
+       case "certificates":
+         return <CertificateGeneration />;  */
       default:
         return <div>请选择一个管理功能</div>;
     }

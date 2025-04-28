@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS tasks (
 CREATE TABLE IF NOT EXISTS task_scores (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   student_id TEXT NOT NULL,
-  task_number INTEGER NOT NULL,   -- 任务编号 Task1 ~ Task6
+  task_number INTEGER NOT NULL,   -- 任务编号 
   score_type TEXT NOT NULL CHECK (score_type IN ('choice', 'practice')),      -- 'choice' 或 'practice'
   score INTEGER DEFAULT 0,
   completed BOOLEAN DEFAULT 0,

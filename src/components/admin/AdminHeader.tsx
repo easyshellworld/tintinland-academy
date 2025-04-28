@@ -60,7 +60,7 @@ export function AdminHeader({
     { id: "students", label: "学员管理" },
     { id: "staff", label: "工作人员管理" },
     { id: "announcements", label: "公告管理" },
-    { id: "resources", label: "学习资源管理" },
+    { id: "notes", label: "学习笔记管理" },
     { id: "answers", label: "答题卡管理" },
     { id: "grades", label: "成绩管理" },
     { id: "certificates", label: "毕业证书生成" },

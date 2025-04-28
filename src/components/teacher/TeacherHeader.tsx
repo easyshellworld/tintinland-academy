@@ -61,7 +61,7 @@ export function AdminHeader({
     { id: "announcements", label: "公告与学习资源管理" }, 
     { id: "answers", label: "答题卡管理" },
     { id: "grades", label: "成绩管理" },
-    { id: "resources", label: "学习资源管理" },
+    { id: "notes", label: "学习笔记管理" },
  
   ];
 

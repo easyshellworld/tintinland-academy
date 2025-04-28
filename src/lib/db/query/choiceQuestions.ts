@@ -135,3 +135,13 @@ export function calculateChoiceScore(studentAnswers: { [questionId: number]: str
 
   return score;
 }
+
+export function deleteChoiceQuestionsByTaskNumber(taskNumber: number) {
+  const stmt = db.prepare('DELETE FROM choice_questions WHERE task_number = ?');
+  try {
+    const result = stmt.run(taskNumber);
+    return { success: true, changes: result.changes };
+  } catch (error) {
+    return { success: false, error: error as DbError };
+  }
+}

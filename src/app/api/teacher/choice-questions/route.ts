@@ -4,6 +4,7 @@ import {
   addChoiceQuestion, 
   updateChoiceQuestion, 
   deleteChoiceQuestion,
+  deleteChoiceQuestionsByTaskNumber,
   ChoiceQuestion
 } from '@/lib/db/query/choiceQuestions';
 
@@ -87,6 +88,29 @@ export async function POST(request: NextRequest) {
             { status: 400 }
           );
         }
+
+        case 'deleteByTask':
+          if (!data.taskNumber && data.taskNumber !== 0) {
+            return NextResponse.json(
+              { success: false, error: 'Task number is required' },
+              { status: 400 }
+            );
+          }
+  
+          const deleteByTaskResult = deleteChoiceQuestionsByTaskNumber(Number(data.taskNumber));
+          
+          if (deleteByTaskResult.success) {
+            return NextResponse.json({ 
+              success: true, 
+              message: `Successfully deleted ${deleteByTaskResult.changes} questions for task ${data.taskNumber}`,
+              changes: deleteByTaskResult.changes
+            });
+          } else {
+            return NextResponse.json(
+              { success: false, error: deleteByTaskResult.error },
+              { status: 400 }
+            );
+          }
 
       default:
         return NextResponse.json(
