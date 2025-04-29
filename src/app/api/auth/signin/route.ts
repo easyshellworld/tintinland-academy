@@ -38,6 +38,12 @@ export async function POST(req: NextRequest) {
     } else if (user.success === true && user.role==="admin") {
       return NextResponse.json({ status: "approved", token: true });
     }
+    else if (user.success === true && user.role==="teacher") {
+      return NextResponse.json({ status: "approved", token: true });
+    }
+    else if (user.success === true && user.role==="assistant") {
+      return NextResponse.json({ status: "approved", token: true });
+    }
       else if (user.success === true && user.role==="pending") {
       return NextResponse.json({ status: "pending" });
     } else if (user.success === true ) {

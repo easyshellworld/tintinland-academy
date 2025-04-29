@@ -1,3 +1,4 @@
+// ./src/app/page.tsx
 "use client";
 import Image from 'next/image';
 import { useEffect, useState } from "react";
@@ -6,16 +7,17 @@ import { useRouter } from "next/navigation";
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { useSession, signIn } from "next-auth/react";
 
+
 // Define authentication states
 type AuthState = 'initial' | 'connecting' | 'signing' | 'authenticating' | 'registered' | 'pending' | 'error';
 
-const getTitle =()=> process.env.NEXT_PUBLIC_ITEM_TITLE  || "LXdao 学习系统";
+const getTitle =()=> process.env.NEXT_PUBLIC_ITEM_TITLE  || "Oneblock Academy";
 
 export default function Home() {
   const { address, isConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
   const router = useRouter();
-  const { status } = useSession();
+  const { status,data:session } = useSession();
 
   // More granular authentication state
   const [authState, setAuthState] = useState<AuthState>('initial');
@@ -85,10 +87,18 @@ export default function Home() {
   }, [isConnected, address, router, signMessageAsync]);
 
   useEffect(() => {
-    if (status === 'authenticated' && isConnected && address) {
-      router.push('/dashboard');
+    if (status === 'authenticated' && isConnected && address && session?.user?.role) {
+
+      const { role } = session.user;
+      if (role === "admin") {
+        router.push("/admin");
+      } else if (role === "teacher" || role === "assistant") {
+        router.push("/teacher");
+      } else if(role === "student"){
+        router.push("/student");
+      }
     }
-  }, [status, router, isConnected, address]);
+  }, [status, router, isConnected, address, session]);
 
   // Render different UI based on authentication state
   const renderAuthContent = () => {
