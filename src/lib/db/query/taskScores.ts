@@ -5,6 +5,15 @@ import type { RunResult } from 'better-sqlite3'
 
 export type ScoreType = 'choice' | 'practice'
 
+export interface StudentScore {
+  student_id: string;
+  student_name: string;
+  wechat_id: string;
+  wallet_address: string;
+  total_score: number;
+}
+
+
 export interface TaskScore {
   id: number
   student_id: string
@@ -185,4 +194,23 @@ export function getRawScores(): RawScore[] {
     `
     )
     .all()
+}
+
+
+
+export function getStudentScores(): StudentScore[] {
+  const stmt = db.prepare(`
+    SELECT 
+      r.student_id,
+      r.student_name,
+      r.wechat_id,
+      r.wallet_address,
+      IFNULL(SUM(t.score), 0) AS total_score
+    FROM registrations r
+    LEFT JOIN task_scores t ON r.student_id = t.student_id
+    GROUP BY r.student_id
+    ORDER BY total_score DESC;
+  `);
+  
+  return stmt.all();
 }

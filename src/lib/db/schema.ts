@@ -126,5 +126,18 @@ CREATE TABLE IF NOT EXISTS task_scores (
       updated_at DATETIME  
     );
 
+    CREATE TABLE IF NOT EXISTS projects (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id TEXT UNIQUE,
+    project_name TEXT,
+    factory_address TEXT,
+    whitelist_address TEXT,
+    nft_address TEXT,
+    claim_address TEXT,
+    erc20_addrss TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME  
+  )
+
   `);
 }
