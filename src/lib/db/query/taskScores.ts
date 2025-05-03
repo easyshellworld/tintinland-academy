@@ -199,7 +199,7 @@ export function getRawScores(): RawScore[] {
 
 
 export function getStudentScores(): StudentScore[] {
-  const stmt = db.prepare(`
+  const stmt = db.prepare<[], StudentScore>(`
     SELECT 
       r.student_id,
       r.student_name,
@@ -211,6 +211,7 @@ export function getStudentScores(): StudentScore[] {
     GROUP BY r.student_id
     ORDER BY total_score DESC;
   `);
+
   
   return stmt.all();
 }

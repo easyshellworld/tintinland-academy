@@ -4,6 +4,7 @@ import {
   createTaskScore,
   updateTaskScore,
   deleteTaskScore,
+  getStudentScores
 } from '@/lib/db/query/taskScores'
 
 // POST /api/teacher/task-scores
@@ -32,6 +33,13 @@ export async function POST(req: Request) {
     deleteTaskScore(id)
     return NextResponse.json({ id })
   }
+
+    // ✅ 新增 summary 功能
+    if (action === 'summary') {
+      
+      const summary = getStudentScores()
+      return NextResponse.json(summary)
+    }
 
   return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
 }

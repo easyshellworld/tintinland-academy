@@ -9,7 +9,7 @@ import { AnnouncementManagement } from "@/components/teacher/AnnouncementManagem
 import { AnswerCardManagement } from "@/components/teacher/AnswerCardManagement";
 import { GradeManagement } from "@/components/teacher/GradeManagement"
 import { NotesManagement } from "@/components/teacher/NotesManagement"
-import { CreateProjectForm } from "@/components/admin/project/CreateProjectForm";
+import { StudentRewardsWorkflow } from "@/components/admin/project/StudentRewardsWorkflow";
 /* import { AnnouncementManagement } from "@/components/admin/AnnouncementManagement";
 import { ResourceManagement } from "@/components/admin/ResourceManagement";
 import { AnswerCardManagement } from "@/components/admin/AnswerCardManagement";
@@ -36,7 +36,7 @@ function AdminContent() {
       case "notes":
         return <NotesManagement />;
         case "certificates":
-          return <CreateProjectForm />
+          return <StudentRewardsWorkflow />
       /*  case "announcements":
          return <AnnouncementManagement />;
        case "resources":

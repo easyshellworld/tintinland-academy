@@ -45,7 +45,16 @@ const factoryAbi = [
   }
 ] as const;
 
-export function CreateProjectForm() {
+interface CreateProjectFormProps {
+  onProjectCreated: (data: {
+    whitelistAddr: `0x${string}`;
+    nftAddr: `0x${string}`;
+    claimAddr: `0x${string}`;
+    erc20Addr: `0x${string}`;
+  }) => void;
+}
+
+export function CreateProjectForm({ onProjectCreated }: CreateProjectFormProps) {
   const { address } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const publicClient = usePublicClient();
@@ -53,7 +62,7 @@ export function CreateProjectForm() {
   const [projectName, setProjectName] = useState('');
   const [symbol, setSymbol] = useState('');
   const [baseURI, setBaseURI] = useState('');
-  const [deposit, setDeposit] = useState('0');
+  const [deposit, setDeposit] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -136,7 +145,12 @@ export function CreateProjectForm() {
         throw new Error('保存项目信息失败');
       }
 
-      alert('项目创建成功!');
+      onProjectCreated({
+        whitelistAddr: args.whitelistContract,
+        nftAddr: args.nftContract,
+        claimAddr: args.claimContract,
+        erc20Addr: tokenAddr as `0x${string}`
+      });
     } catch (err) {
       console.error(err);
       alert(`创建失败: ${err instanceof Error ? err.message : '未知错误'}`);
@@ -172,7 +186,7 @@ export function CreateProjectForm() {
         required
       />
       <Input
-        placeholder="认领配额 (ETH)"
+        placeholder="认领配额"
         value={deposit}
         onChange={e => setDeposit(e.target.value)}
         required
