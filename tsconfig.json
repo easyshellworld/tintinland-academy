@@ -24,6 +24,6 @@
     "typeRoots": ["./types", "./node_modules/@types"],
     
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "tests/**/*","types/**/*.d.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "tests/**/*","types/**/*.d.ts", "contracts/deploy-test.js"],
   "exclude": ["node_modules"]
 }

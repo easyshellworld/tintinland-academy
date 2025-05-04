@@ -7,6 +7,7 @@ import { AnnouncementViewer } from '@/components/student/AnnouncementViewer';
 import { PersonalNotes } from '@/components/student/PersonalNotes';
 import { AnswerCard } from '@/components/student/AnswerCard';
 import { GradeViewer } from '@/components/student/GradeViewer';
+import { StudentClaimComponent } from '@/components/student/Claim';
 
 export default function StudentPage() {
   const [activeTab, setActiveTab] = useState('announcements');
@@ -21,6 +22,8 @@ export default function StudentPage() {
         return <AnswerCard />;
       case 'grades':
         return <GradeViewer />;
+      case 'Claim':
+        return <StudentClaimComponent />;
       default:
         return <AnnouncementViewer />;
     }
@@ -47,6 +50,9 @@ export default function StudentPage() {
             </TabsTrigger>
             <TabsTrigger value="grades">
               我的成绩
+            </TabsTrigger>
+            <TabsTrigger value="Claim">
+            Claim
             </TabsTrigger>
           </TabsList>
         </Tabs>

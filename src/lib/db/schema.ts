@@ -134,10 +134,27 @@ CREATE TABLE IF NOT EXISTS task_scores (
     whitelist_address TEXT,
     nft_address TEXT,
     claim_address TEXT,
-    erc20_addrss TEXT,
+    erc20_address TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME  
-  )
+  )；
+
+  CREATE TABLE IF NOT EXISTS student_project_claims (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  student_id TEXT NOT NULL,
+  project_id TEXT NOT NULL,
+  project_name TEXT NOT NULL,
+  nft_address TEXT NOT NULL,
+  claim_address TEXT NOT NULL,
+  erc20_address TEXT NOT NULL,
+  has_claimed BOOLEAN NOT NULL DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME,
+  UNIQUE(student_id, project_id),
+  FOREIGN KEY(student_id) REFERENCES registrations(student_id),
+  FOREIGN KEY(project_id) REFERENCES projects(project_id)
+);
+
 
   `);
 }
