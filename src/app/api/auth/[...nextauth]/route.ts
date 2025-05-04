@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { checkWalletAuth } from "@/lib/db/query/authdb";
 import { verifyMessage } from "viem";
 
+
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
@@ -45,6 +46,7 @@ const handler = NextAuth({
           if (user.success === true) {
             return {
               id: user.id!,
+              name:user.name!,
               address: credentials.address,
               status: "approved",
               role: user.role ?? "user"
@@ -63,6 +65,7 @@ const handler = NextAuth({
     jwt: async ({ token, user }) => {
       if (user && "address" in user && "status" in user) {
         token.id=user.id as string;
+        token.name=user.name as string;
         token.address = user.address as string;
         token.status = user.status as string;
         token.role=user.role as string;
@@ -71,8 +74,9 @@ const handler = NextAuth({
     },
     session: async ({ session, token }) => {
       if (session.user) {
-        const user = session.user as unknown as { id:string; address: string;role:string; status: string };
+        const user = session.user as unknown as { id:string; name:string; address: string;role:string; status: string };
         user.id=token.id as string;
+        user.name=token.name as string;
         user.address = token.address as string;
         user.status = token.status as string;
         user.role =token.role as string;

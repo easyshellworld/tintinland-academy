@@ -1,64 +1,63 @@
 'use client';
 
-import { useState } from 'react';
+//import { useState } from 'react';
 import { StudentHeader } from '@/components/student/StudentHeader';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+//import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AnnouncementViewer } from '@/components/student/AnnouncementViewer';
 import { PersonalNotes } from '@/components/student/PersonalNotes';
 import { AnswerCard } from '@/components/student/AnswerCard';
 import { GradeViewer } from '@/components/student/GradeViewer';
 import { StudentClaimComponent } from '@/components/student/Claim';
+import { AdminProvider, useAdmin } from "@/components/AdminContext";
 
-export default function StudentPage() {
-  const [activeTab, setActiveTab] = useState('announcements');
+// 主内容区域组件
+function AdminContent() {
+  const { activeView } = useAdmin();
 
+  // 根据当前视图渲染相应的组件
   const renderContent = () => {
-    switch (activeTab) {
-      case 'announcements':
+    switch (activeView) {
+     
+      case "announcements":
         return <AnnouncementViewer />;
-      case 'notes':
-        return <PersonalNotes />;
-      case 'answers':
+      case "answers":
         return <AnswerCard />;
-      case 'grades':
+      case "grades":
         return <GradeViewer />;
-      case 'Claim':
-        return <StudentClaimComponent />;
+      case "notes":
+        return <PersonalNotes />;
+      case "claim":
+         return <StudentClaimComponent/>
+      /*  case "announcements":
+         return <AnnouncementManagement />;
+       case "resources":
+         return <ResourceManagement />;
+       case "answers":
+         return <AnswerCardManagement />;
+       case "grades":
+         return <GradeManagement />;
+       case "certificates":
+         return <CertificateGeneration />;  */
       default:
-        return <AnnouncementViewer />;
+        return <div>请选择一个管理功能</div>;
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col">
-      <StudentHeader />
+      <StudentHeader title="Oneblock Academy 学习系统"  />
       <main className="flex-1 container py-6">
-        <Tabs 
-          value={activeTab} 
-          onValueChange={setActiveTab}
-          className="mb-6"
-        >
-          <TabsList>
-            <TabsTrigger value="announcements">
-              公告与资源
-            </TabsTrigger>
-            <TabsTrigger value="notes">
-              学习笔记
-            </TabsTrigger>
-            <TabsTrigger value="answers">
-              答题卡
-            </TabsTrigger>
-            <TabsTrigger value="grades">
-              我的成绩
-            </TabsTrigger>
-            <TabsTrigger value="Claim">
-            Claim
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-
         {renderContent()}
       </main>
     </div>
+  );
+}
+
+// 页面组件，包含 Context Provider
+export default function StudentPage() {
+  return (
+    <AdminProvider>
+      <AdminContent  />
+    </AdminProvider>
   );
 }

@@ -10,7 +10,8 @@ export type AdminView =
   | "notes" 
   | "answers" 
   | "grades" 
-  | "certificates";
+  | "certificates"
+  | "claim";
 
 // 上下文提供者接口
 interface AdminContextValue {
