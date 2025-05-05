@@ -55,6 +55,17 @@ async function deploy(name) {
 async function main() {
   console.log('部署者地址:', account.address);
 
+    // 依次部署各实现合约
+    const whitelist = await deploy('Whitelist');
+    const customNFT = await deploy('CustomNFT');
+     const claim = await deploy('Claim');
+
+     
+  console.log('\n--- 实现合约部署完成 ---');
+  console.log('Whitelist:', whitelist.contractAddress);
+  console.log('CustomNFT:', customNFT.contractAddress);
+  console.log('Claim:', claim.contractAddress);
+
   // 1. 部署工厂合约
   console.log('\n--- 部署工厂合约 ---');
   const factoryAddr = await deploy('Factory3');
@@ -151,12 +162,12 @@ async function main() {
       to: acct.address,
       value: parseEther('1'),
     });
-    await walletClient.writeContract({
+/*     await walletClient.writeContract({
       abi: tokenAbi,
       address: MY_TOKEN_ADDRESS,
       functionName: 'transfer',
       args: [acct.address, parseEther('100')],
-    });
+    }); */
   }
 
   // 存入 Claim 合约

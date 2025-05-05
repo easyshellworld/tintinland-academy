@@ -56,14 +56,14 @@ async function main() {
   console.log(`📡 网络: ${RPC_URL}\n`);
 
   // 依次部署各实现合约
-/*   const whitelist = await deploy('Whitelist');
+  const whitelist = await deploy('Whitelist');
  const customNFT = await deploy('CustomNFT');
   const claim = await deploy('Claim');
 
   console.log('\n--- 实现合约部署完成 ---');
   console.log('Whitelist:', whitelist.contractAddress);
   console.log('CustomNFT:', customNFT.contractAddress);
-  console.log('Claim:', claim.contractAddress); */
+  console.log('Claim:', claim.contractAddress);
 
   // 部署 Factory3 合约
   const factory = await deploy('Factory3');

@@ -7,7 +7,6 @@ export interface StudentNote {
   student_name: string;
   title: string;
   content_markdown: string;
-  task_number: number;
   created_at?: string;
   updated_at?: string;
 }
@@ -26,9 +25,9 @@ export function getNotesByStudentId(studentId: string): StudentNote[] {
 export function addStudentNote(note: StudentNote) {
   const stmt = db.prepare(`
     INSERT INTO student_notes (
-      student_id, student_name, title, content_markdown, task_number, created_at, updated_at
+      student_id, student_name, title, content_markdown, created_at, updated_at
     ) VALUES (
-      @student_id, @student_name, @title, @content_markdown, @task_number, @created_at, @updated_at
+      @student_id, @student_name, @title, @content_markdown, @created_at, @updated_at
     )
   `);
   const now = new Date().toISOString();

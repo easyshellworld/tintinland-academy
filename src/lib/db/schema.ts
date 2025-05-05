@@ -108,8 +108,7 @@ CREATE TABLE IF NOT EXISTS task_scores (
       student_id TEXT,
       student_name TEXT,
       title TEXT NOT NULL,                  
-      content_markdown TEXT NOT NULL,       
-      task_number INTEGER,                  
+      content_markdown TEXT NOT NULL,                       
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME,  
       FOREIGN KEY (student_id) REFERENCES registrations(student_id)

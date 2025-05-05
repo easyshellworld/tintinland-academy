@@ -2,8 +2,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "lxdao-learn-test",
-  description: "lxdao-learn-test",
+  title: "Oneblock Academy",
+  description: "Oneblock Academy",
 };
 
 export default function MetadataLayout({
