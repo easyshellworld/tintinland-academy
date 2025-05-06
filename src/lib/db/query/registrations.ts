@@ -37,7 +37,7 @@ export interface Registration {
 
 
 
-export function addRegistration(reg: Omit<Registration, 'student_id'>) {
+export function addRegistration(reg: Omit<Registration, 'student_id' | 'id'>): {success: boolean, data?: Registration} {
   // 查询当前最大 student_id（转为整数）
   const result = db.prepare(
     `SELECT MAX(CAST(student_id AS INTEGER)) as maxId FROM registrations WHERE student_id GLOB '[0-9]*'`
@@ -77,7 +77,17 @@ export function addRegistration(reg: Omit<Registration, 'student_id'>) {
     updated_at: now,
   };
 
-  stmt.run(params);
+  try {
+    const result = stmt.run(params);
+    if (result.changes > 0) {
+      const inserted = getRegistrationByStudentId(formattedId);
+      return { success: true, data: inserted };
+    }
+    return { success: false };
+  } catch (error) {
+    console.error('Failed to add registration:', error);
+    return { success: false };
+  }
 }
 
 
@@ -152,4 +162,3 @@ export function getRegistrationByStudentId(studentId: string){
 export function getRegistrationsByApprovalStatus(approved: boolean) {
   return db.prepare('SELECT * FROM registrations WHERE approved = ? ORDER BY created_at DESC').all(approved ? 1 : 0);
 }
-

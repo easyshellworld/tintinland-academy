@@ -6,7 +6,6 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
     const {
-    
       name,
       wechatId,
       phone,
@@ -30,7 +29,6 @@ export async function POST(request: Request) {
       privateMsg,
       inviter,
       address,
-      studentId,
     } = data;
 
     // 校验必填字段
@@ -39,8 +37,7 @@ export async function POST(request: Request) {
     }
 
     // 构造注册对象
-    const reg: Registration = {
-
+    const reg: Omit<Registration, 'student_id' | 'id'> = {
       student_name: name,
       wechat_id: wechatId,
       phone,
@@ -64,16 +61,26 @@ export async function POST(request: Request) {
       wants_private_service: privateMsg === '是',
       referrer: inviter,
       wallet_address: address,
-      student_id: studentId,
       approved: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     };
 
     // 写入数据库
-    addRegistration(reg);
+    const result = await addRegistration(reg);
+    if (!result.success) {
+      return NextResponse.json({ message: 'Database operation failed' }, { status: 500 });
+    }
 
-    return NextResponse.json({ message: 'Registration successful' });
+    return NextResponse.json({ 
+      message: 'Registration successful',
+      data: result.data 
+    });
   } catch (error) {
     console.error('Registration failed:', error);
-    return NextResponse.json({ message: 'Registration failed' }, { status: 500 });
+    return NextResponse.json({ 
+      message: 'Registration failed',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
 }

@@ -1,15 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server';
+// app/api/ERC721/meta/[id]/route.ts
+import { /* NextRequest,  */NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  // 简单处理避免 eslint 报错（例如记录日志，或读取属性）
-  console.log("Received ID:", params.id);
-  req.headers.get("user-agent"); // 虽然不使用，但访问即可避免 unused 报错
+export async function GET(
+ /*  req: NextRequest,
+  context: { params: { id?: string} } */
+) {
+/*   const { id } = context.params;
 
+  // 使用一下 req 避免 eslint 报错
+  console.log("Received ID:", id);
+  req.headers.get("user-agent");
+ */
   const metadata = {
-    attributes: [
-      { trait_type: "Shape", value: "Circle" },
-      { trait_type: "Mood", value: "Sad" },
-    ],
+
     description: "oneblock",
     image: "https://xxxx.netlify.app/oneblock.jpg",
     name: "oneblock",
