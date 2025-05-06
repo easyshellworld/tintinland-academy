@@ -5,8 +5,9 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { RegistrationsTable } from "@/components/admin/RegistrationsTable";
 import { RegistrationDetails } from "@/components/admin/RegistrationDetails";
+import { Registration } from "@/lib/db/query/registrations";
 
-interface Registration {
+/* interface Registration {
   id: string;
   student_id: string;
   student_name: string;
@@ -19,7 +20,7 @@ interface Registration {
   approved: boolean;
   created_at: string;
   updated_at: string;
-}
+} */
 
 export function StudentManagement() {
   const [registrations, setRegistrations] = useState<Registration[]>([]);

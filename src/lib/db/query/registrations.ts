@@ -28,7 +28,7 @@ export interface Registration {
   wants_private_service: boolean;
   referrer: string;
   wallet_address: string;
-  student_id?: string;
+  student_id: string;
   approved?: boolean;
   created_at?: string;
   updated_at?:string;

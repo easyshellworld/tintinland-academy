@@ -24,21 +24,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Check, X, Search, Trash } from "lucide-react";
+import { Registration} from "@/lib/db/query/registrations"
 
-interface Registration {
-  id: string;
-  student_id: string;
-  student_name: string;
-  email: string;
-  phone: string;
-  grade: string;
-  school: string;
-  parent_name: string;
-  parent_phone: string;
-  approved: boolean;
-  created_at: string;
-  updated_at: string;
-}
 
 interface RegistrationsTableProps {
   registrations: Registration[];
@@ -61,11 +48,14 @@ export function RegistrationsTable({
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [registrationToDelete, setRegistrationToDelete] = useState<string | null>(null);
 
-  const filteredRegistrations = registrations.filter(reg => 
-    reg.student_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    reg.student_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    reg.school.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredRegistrations = registrations.filter(reg => {
+    const term = searchTerm.toLowerCase();
+    return (
+      (reg.student_name?.toLowerCase() || "").includes(term) ||
+      (reg.student_id?.toString().toLowerCase() || "").includes(term) || // 确保转为字符串
+      (reg.wechat_id?.toLowerCase() || "").includes(term)
+    );
+  });
 
   const handleDeleteClick = (studentId: string) => {
     setRegistrationToDelete(studentId);
@@ -80,8 +70,11 @@ export function RegistrationsTable({
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
+  const formatDate = (dateString?: string | null): string => {
+    if (!dateString) return "N/A"; // 处理 undefined/null/空字符串
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "N/A"; // 处理无效日期格式
+    return date.toLocaleDateString("zh-CN"); // 按中文格式显示，例如 "2023/10/05"
   };
 
   return (
@@ -103,9 +96,10 @@ export function RegistrationsTable({
           <TableHeader>
             <TableRow>
               <TableHead className="w-[180px]">Student Name</TableHead>
-              <TableHead>Student ID</TableHead>
-              <TableHead>School</TableHead>
-              <TableHead>Grade</TableHead>
+              <TableHead>学号</TableHead>
+              <TableHead>微信号</TableHead>
+              <TableHead>学历</TableHead>
+             {/*  <TableHead>钱包地址</TableHead> */}
               <TableHead>Date</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -133,8 +127,9 @@ export function RegistrationsTable({
                 >
                   <TableCell className="font-medium">{registration.student_name}</TableCell>
                   <TableCell>{registration.student_id}</TableCell>
-                  <TableCell>{registration.school}</TableCell>
-                  <TableCell>{registration.grade}</TableCell>
+                  <TableCell>{registration.wechat_id}</TableCell>
+                  <TableCell>{registration.university}</TableCell>
+                  {/* <TableCell>{registration.wallet_address}</TableCell> */}
                   <TableCell>{formatDate(registration.created_at)}</TableCell>
                   <TableCell>
                     <Badge variant={registration.approved ? "default" : "secondary"}>

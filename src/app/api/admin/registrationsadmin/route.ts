@@ -8,7 +8,7 @@ import {
   getRegistrationByStudentId,
 } from '@/lib/db/query/registrations';
 
-import { getTaskByStudentId, addTask } from '@/lib/db/query/tasks'; 
+import { getTaskByStudentId/* , addTask  */} from '@/lib/db/query/tasks'; 
 
 export async function POST(request: Request) {
   try {
@@ -36,7 +36,8 @@ export async function POST(request: Request) {
         // ✅ 审核通过后添加初始化任务数据
         if (payload.approved) {
           const existingTask = getTaskByStudentId(payload.student_id);
-          if (!existingTask) {
+          if (!existingTask) {}
+      /*     if (!existingTask) {
             addTask({
               student_id: payload.student_id,
               student_name: reg.student_name,
@@ -55,7 +56,7 @@ export async function POST(request: Request) {
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString(),
             });
-          }
+          } */
         }
 
         return NextResponse.json(approveResult);
