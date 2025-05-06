@@ -154,7 +154,7 @@ export function GradeViewer() {
       <Tabs value={activeTab} onValueChange={setActiveTab} defaultValue="my-scores">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="my-scores">我的成绩</TabsTrigger>
-          <TabsTrigger value="rankings">班级排名</TabsTrigger>
+          <TabsTrigger value="rankings">成绩排名</TabsTrigger>
         </TabsList>
         
         <TabsContent value="my-scores">
@@ -239,7 +239,7 @@ export function GradeViewer() {
         <TabsContent value="rankings">
           <Card>
             <CardHeader>
-              <CardTitle>班级成绩排名</CardTitle>
+              <CardTitle>成绩排名</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="border rounded-lg">

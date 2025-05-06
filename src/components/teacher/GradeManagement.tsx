@@ -1,6 +1,10 @@
-// src/components/GradeManagement.tsx
+// src/components/teacher/GradeManagement.tsx
 import { useState, useEffect } from 'react'
 import { ScoreType } from '@/lib/db/query/taskScores'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+//import { toast } from 'sonner';
 
 interface RawScore {
   id: number
@@ -21,6 +25,14 @@ interface FormData {
   completed: boolean
 }
 
+interface StudentScore {
+  student_id: string;
+  student_name: string;
+  wechat_id: string;
+  wallet_address: string;
+  total_score: number;
+}
+
 export function GradeManagement() {
   const [scores, setScores] = useState<RawScore[]>([])
   const [loading, setLoading] = useState(true)
@@ -35,7 +47,8 @@ export function GradeManagement() {
   const [isEditing, setIsEditing] = useState(false)
   const [selectedStudentId, setSelectedStudentId] = useState<string>('')
   const [filteredScores, setFilteredScores] = useState<RawScore[]>([])
-
+    const [activeTab, setActiveTab] = useState('management');
+  const [rankings, setRankings] = useState<StudentScore[]>([]);
   // Fetch all scores
   useEffect(() => {
     const fetchScores = async () => {
@@ -46,6 +59,16 @@ export function GradeManagement() {
         const data: RawScore[] = await res.json()
         setScores(data)
         setFilteredScores(data)
+        const rankingsRes = await fetch('/api/teacher/task-scores', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'summary' })
+        });
+        
+        if (!rankingsRes.ok) throw new Error('获取排名失败');
+        const rankingsData = await rankingsRes.json();
+        setRankings(rankingsData);
+
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error')
       } finally {
@@ -53,6 +76,10 @@ export function GradeManagement() {
       }
     }
     fetchScores()
+       
+       
+    
+    
   }, [])
 
   // Filter when student selection changes
@@ -180,7 +207,17 @@ export function GradeManagement() {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-6">成绩管理系统</h1>
-
+           <Tabs value={activeTab} onValueChange={setActiveTab} defaultValue="my-scores">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="management">成绩管理</TabsTrigger>
+                <TabsTrigger value="rankings">成绩排名</TabsTrigger>
+              </TabsList>
+       <TabsContent value="management">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>成绩管理</CardTitle>
+                  </CardHeader>
+                  <CardContent>      
       {/* 学生筛选 */}
       <div className="mb-6">
         <label className="block mb-2 font-medium">选择学生：</label>
@@ -361,6 +398,56 @@ export function GradeManagement() {
           </div>
         </form>
       </div>
-    </div>
+          </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent value="rankings">
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>成绩排名</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="border rounded-lg">
+                              <Table>
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead>排名</TableHead>
+                                    <TableHead>学号</TableHead>
+                                    <TableHead>姓名</TableHead>
+                                    <TableHead>总分数</TableHead>
+                                    <TableHead></TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  {rankings.length > 0 ? (
+                                    rankings.map((student, index) => (
+                                      <TableRow 
+                                        key={student.student_id}
+                                      
+                                      >
+                                        <TableCell>{index + 1}</TableCell>
+                                        <TableCell>{student.student_id}</TableCell>
+                                        <TableCell>{student.student_name}</TableCell>
+                                        <TableCell>{student.total_score}</TableCell>
+                                     
+                                      </TableRow>
+                                    ))
+                                  ) : (
+                                    <TableRow>
+                                      <TableCell colSpan={5} className="text-center py-4">
+                                        暂无排名数据
+                                      </TableCell>
+                                    </TableRow>
+                                  )}
+                                </TableBody>
+                              </Table>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </TabsContent>
+
+
+       </Tabs>
+        </div>
   )
 }
