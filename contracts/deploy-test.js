@@ -12,11 +12,11 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
-const MY_TOKEN_ADDRESS = process.env.MY_TOKEN_ADDRESS;
+//const MY_TOKEN_ADDRESS = process.env.MY_TOKEN_ADDRESS;
 const RPC_URL = process.env.RPC_URL;
 
 // 环境变量校验
-if (!PRIVATE_KEY || !MY_TOKEN_ADDRESS || !RPC_URL) {
+if (!PRIVATE_KEY || !RPC_URL) {
   throw new Error('请在 .env 文件中设置 PRIVATE_KEY、MY_TOKEN_ADDRESS 和 RPC_URL');
 }
 
@@ -43,10 +43,10 @@ function loadBytecode(name) {
   return '0x' + json.bytecode;
 }
 
-async function deploy(name) {
+async function deploy(name, args) {
   const abi = loadAbi(name);
   const bytecode = loadBytecode(name);
-  const hash = await walletClient.deployContract({ abi, bytecode, args: [] });
+  const hash = await walletClient.deployContract({ abi, bytecode, args: args });
   const receipt = await publicClient.waitForTransactionReceipt({ hash });
   console.log(`${name} 部署成功:`, receipt.contractAddress);
   return receipt.contractAddress;
@@ -55,17 +55,19 @@ async function deploy(name) {
 async function main() {
   console.log('部署者地址:', account.address);
 
-    // 依次部署各实现合约
-    const whitelist = await deploy('Whitelist');
-    const customNFT = await deploy('CustomNFT');
-     const claim = await deploy('Claim');
+  // 依次部署各实现合约
+  const whitelist = await deploy('Whitelist');
+  const customNFT = await deploy('CustomNFT');
+  const claim = await deploy('Claim');
+  const MyToken = await deploy('MyToken', ["MyToken", "MTKk", 18, parseEther("1000000", 18)]);
 
-     
+
   console.log('\n--- 实现合约部署完成 ---');
-  console.log('Whitelist:', whitelist.contractAddress);
-  console.log('CustomNFT:', customNFT.contractAddress);
-  console.log('Claim:', claim.contractAddress);
-
+  console.log('Whitelist:', whitelist);
+  console.log('CustomNFT:', customNFT);
+  console.log('Claim:', claim);
+  console.log('MyToken:', MyToken);
+  const MY_TOKEN_ADDRESS = MyToken
   // 1. 部署工厂合约
   console.log('\n--- 部署工厂合约 ---');
   const factoryAddr = await deploy('Factory3');
@@ -77,7 +79,7 @@ async function main() {
 
   // 构造 bytes32 格式的 projectId
   const buf = Buffer.alloc(32);
-  buf.write('PROJECT_BATCH'); 
+  buf.write('PROJECT_BATCH');
   const projectId = '0x' + buf.toString('hex');
 
   // 发起 createProject 交易
@@ -91,7 +93,7 @@ async function main() {
       'MyNFT',
       'MNFT',
       'https://example.com/meta/',
-      parseEther('10'), 
+      parseEther('10', 18),
     ],
   });
 
@@ -146,44 +148,82 @@ async function main() {
   });
 
   // 批量加入白名单
+  console.log(addresses)
   const whitelistAbi = loadAbi('Whitelist');
-  await walletClient.writeContract({
+  const whitelist1=await walletClient.writeContract({
     abi: whitelistAbi,
     address: whitelistContract,
     functionName: 'batchAddToWhitelist',
     args: [addresses],
   });
-  console.log('✅ 批量白名单地址添加完成');
+  const test1=await publicClient.waitForTransactionReceipt({ hash:whitelist1 });
+  console.log('✅ 批量白名单地址添加完成'+test1);
 
   // 分发 ETH 和 Token
   const tokenAbi = loadAbi('MyToken');
   for (const { account: acct } of wallets) {
-    await walletClient.sendTransaction({
-      to: acct.address,
-      value: parseEther('1'),
+    const feeData = await publicClient.estimateGas({
+      account,
+      to: account.address,
+      value: 0n,
     });
-/*     await walletClient.writeContract({
-      abi: tokenAbi,
-      address: MY_TOKEN_ADDRESS,
-      functionName: 'transfer',
-      args: [acct.address, parseEther('100')],
-    }); */
-  }
+    console.log('估算 Gas:', feeData);
+    //   console.log(`部署网络：${RPC_URL}`);
+    const hash = await walletClient.sendTransaction({
+      to: acct.address,
+      value: parseEther('1000'),
+    });
 
+    // 等待链上确认（默认等待 1 个区块确认）
+    await publicClient.waitForTransactionReceipt({ hash });
+
+     console.log('交易已确认，交易回执:');
+    /*     await walletClient.writeContract({
+          abi: [
+            {
+              name: 'transfer',
+              type: 'function',
+              stateMutability: 'nonpayable',
+              inputs: [
+                { name: '_to', type: 'address' },
+                { name: '_value', type: 'uint256' },
+              ],
+              outputs: [{ name: '', type: 'bool' }],
+            },
+          ],
+          address: MY_TOKEN_ADDRESS,
+          functionName: 'transfer',
+          args: [acct.address, parseEther('100',18)],
+        }); */ 
+  }
+  console.log('开始存入合约');
   // 存入 Claim 合约
-  await walletClient.writeContract({
+  const approve1 =await walletClient.writeContract({
     abi: tokenAbi,
     address: MY_TOKEN_ADDRESS,
     functionName: 'approve',
-    args: [claimContract, parseEther('10000')],
+    args: [claimContract, parseEther('1000',18)],
   });
+  await publicClient.waitForTransactionReceipt({ hash: approve1 });
+
+  const balance1 = await publicClient.readContract({
+    abi: tokenAbi,
+    address: MY_TOKEN_ADDRESS,
+    functionName: 'balanceOf',
+    args: [account.address],
+  });
+  console.log('用户代币余额:', balance1.toString());
+
+  console.log('授权完毕');
   const claimAbi = loadAbi('Claim');
-  await walletClient.writeContract({
+  const deposit= await walletClient.writeContract({
     abi: claimAbi,
     address: claimContract,
     functionName: 'deposit',
-    args: [parseEther('10000')],
+    args: [parseEther('1000',18)],
   });
+  await publicClient.waitForTransactionReceipt({ hash:deposit });
+  console.log('转账完成');
 
   const balance = await publicClient.readContract({
     abi: tokenAbi,
@@ -191,7 +231,7 @@ async function main() {
     functionName: 'balanceOf',
     args: [claimContract],
   });
-  console.log('\n📥 Claim 合约余额:', balance.toString());
+  console.log('\n📥 Claim 合约余额:', balance?.toString());
 
   // 执行 Claim 测试
   const nftAbi = loadAbi('CustomNFT');
