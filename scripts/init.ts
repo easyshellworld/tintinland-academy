@@ -1,7 +1,19 @@
-// ./lib/db/schema.ts
-import db from './index';
+import fs from 'fs';
+import path from 'path';
+import type { Database as DatabaseType } from 'better-sqlite3';
+import  Database from 'better-sqlite3';
 
-export function initTables() {
+
+
+import dotenv from 'dotenv';
+
+
+
+
+dotenv.config();
+
+
+function initTables(db:DatabaseType ) {
   db.exec(`
     CREATE TABLE IF NOT EXISTS registrations (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -157,3 +169,48 @@ CREATE TABLE IF NOT EXISTS task_scores (
 
   `);
 }
+
+
+async function main() {
+  // 1️⃣ 保证 data 目录存在
+  const dataDir = path.resolve(process.cwd(), 'data');
+  console.log("test")
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir);
+    console.log('✅ 已创建 data/ 目录');
+  }
+  const db = new Database(path.resolve(process.cwd(), 'data', 'Academy.db'));
+  // 1. 建表
+  initTables(db);
+
+  // 2. 从环境变量中读取 ADMIN_ADDRESS
+  const adminAddr = process.env.ADMIN_ADDRESS;
+  if (!adminAddr) {
+    console.error('请在 .env.local 中设置 ADMIN_ADDRESS');
+    process.exit(1);
+  }
+
+  // 3. 向 staff 表中插入一条 admin 记录
+  const stmt = db.prepare(`
+    INSERT OR IGNORE INTO staff
+      (name, wechat_id, phone, role, wallet_address)
+    VALUES
+      (@name, @wechat_id, @phone, @role, @wallet_address)
+  `);
+  const info = stmt.run({
+    name: 'oneblock',
+    wechat_id: 'oneblack',
+    phone: '1356895689',
+    role: 'admin',
+    wallet_address: adminAddr,
+  });
+  console.log(`插入 staff 记录，changes=${info.changes}`);
+  console.log(`项目初始化完成，管理员为：${adminAddr}`);
+}
+
+
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
