@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "db:init":"tsx ./scripts/init.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

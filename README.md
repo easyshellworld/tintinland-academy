@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OneBlock-Academy
 
-## Getting Started
+OneBlock-Academy 是一个基于现代Web3与区块链技术的在线学习与奖励平台，旨在为web3教育培训机构提供一站式的学员注册、课程管理、学习笔记、答题考试、成绩评估以及毕业奖励领取的完整解决方案。
 
-First, run the development server:test
+## 开发背景
+
+随着在线教育和区块链技术的快速发展，传统学习平台往往在用户身份管理、学习数据安全、激励机制与透明度方面存在不足。OneBlock-Academy项目结合Next.js、shadcn、Tailwind CSS、SQLite以及智能合约技术，利用web3钱包身份鉴权，打破了中心化的限制，为管理员、教师与学员提供了安全、高效、模块化的学习与奖励管理系统。通过工厂模式智能合约按需求生成新claim项目智能合约（包含白名单合约，NFT合约，claim合约，支持调用第三方ERC20合约token奖励）。
+
+## 技术栈
+
+* **前端框架**：Next.js
+* **UI 组件**：shadcn/ui + Tailwind CSS
+* **数据库**：SQLite（better-sqlite3）
+* **身份与访问控制**：NextAuth+viem +Wagmi（角色：管理员、老师/助教、学员）
+* **区块链交互**：viem + Wagmi
+* **后端**：Next.js API 路由
+* **智能合约** Soildity
+
+## 核心功能模块
+
+1. **注册管理**：
+   * 学员在线注册、信息录入与审核
+   * 管理员统一审批注册数据
+2. **工作人员管理**：
+   * 教师/助教账户创建与权限分配
+   * 管理员对教职工进行增删改查操作
+3. **公共资源管理**：
+   * 文件、课程资料与学习材料的上传、分类与下载
+4. **学习笔记管理**：
+   * 学员可基于 Markdown 记录、编辑与查看学习笔记
+   * 管理员与教师可对公共笔记进行共享
+5. **答题卡管理**：
+   * 考试题库 
+   * 学员在线作答、自动保存与提交
+6. **成绩管理**：
+   * 自动批阅、人工评分与成绩统计
+   * 成绩排名、导出 PDF 报告
+7. **毕业 Claim 管理**：
+   * 通过合约工厂定义毕业奖励领取流程
+   * 学员完成所有模块后，调用智能合约领取链上奖励
+
+## 安装与使用
 
 ```bash
+# 1. 克隆仓库
+git clone https://github.com/easyshellworld/OneBlock-Academy.git
+cd OneBlock-Academy
+
+# 2. 安装 Node.js（推荐 LTS）
+nvm install --lts && nvm use --lts
+
+# 3. 安装依赖
+npm install
+
+# 4. 配置环境变量
+cp .env.example .env
+# 填写：
+# NEXTAUTH_SECRET=a8f9b3c1d4e762509a3718652f4d8c56
+# NEXT_PUBLIC_ITEM_TITLE="Oneblock Academy"  #项目标题名
+# INITIAL_STUDENT_ID=1799          # 初始化学员编号
+# NEXT_PUBLIC_CLAIM_FACTORY=0x85d08E78856A6071c332D9C7a418679D6dED2265 生成claaim
+# ADMIN_ADDRESS=初始化管理员钱包地址
+
+# 5. 数据库迁移与初始化
+npm run db:init
+
+# 6. 启动开发服务器
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# 打开 http://localhost:3000
+
+# 7.项目构建与运行
+npm run  build 
+npm run  start
+
+# 9.智能合约部署
+node ./contracts/deploy.js
+
+# 10.智能合约测试
+node ./contracts/deploy-test.js
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 项目目录结构
 
-## Learn More
+```
+├── src/
+│   ├── app/               # Next.js 路由与页面
+│   ├── lib/               # 数据库交互逻辑
+│   ├── components/        # 公共 UI 组件（shadcn/ui）
+│   ├── styles/            # 全局与模块化样式
+│   └── pages/api/         # API 路由（注册、笔记、考试、claim 等）
+├── data/                  # SQLite 数据库文件
+├── contracts/             # 智能合约源码
+├── scripts/               # 初始化脚本
+├── .env.example           # 环境变量模板（双模板）
+├── README.md
+└── package.json
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 联系方式
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+如有问题或建议，请通过 GitHub 提交 Issue，或在组织内部协作平台联系项目维护者。
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
