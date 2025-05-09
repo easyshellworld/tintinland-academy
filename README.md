@@ -91,7 +91,7 @@ npm run  start
    ```
 * 部署测试命令
 
-```
+```bash
 # 部署环境参数：
 PRIVATE_KEY=  # 私钥
 RPC_URL=https://westend-asset-hub-eth-rpc.polkadot.io
