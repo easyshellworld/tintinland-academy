@@ -1,8 +1,8 @@
 import { http, createConfig} from 'wagmi'
 import { /* base, mainnet,optimism */Chain  } from 'wagmi/chains'
-import { metaMask/* , walletConnect  */} from 'wagmi/connectors'
+import { metaMask, walletConnect } from 'wagmi/connectors'
 
-//const projectId = '<WALLETCONNECT_PROJECT_ID>'
+const projectId =process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID  || "Oneblock Academy" 
 // Asset‑Hub Westend Testnet
 const assetHubWestendTestnet: Chain = {
   id: 420420421,
@@ -38,7 +38,7 @@ export const config = createConfig({
   chains: [/* /* base, mainnet, optimism */assetHubWestendTestnet],
   connectors: [
 
-    // walletConnect({ projectId }),
+    walletConnect({ projectId }),
     metaMask(),
 
   ],
