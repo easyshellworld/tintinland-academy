@@ -1,9 +1,11 @@
 "use client";
 
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { metaMask } from "wagmi/connectors";
+import { metaMask,walletConnect } from "wagmi/connectors";
 //import { subWalletConnector } from "@/lib/subwallet";
 import { Button } from "@/components/ui/button";
+
+const projectId =process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID  || "Oneblock Academy" 
 
 export function ConnectWallet() {
   const { address, isConnected } = useAccount();
@@ -31,14 +33,14 @@ export function ConnectWallet() {
           {isPending ? "Connecting..." : "Connect MetaMask"}
         </Button>
    
-          {/* SubWallet 按钮 */}
-    {/*       <Button
+          {/*  walletConnect 按钮 */}
+          <Button
             variant="default"
-            onClick={() => connect({ connector: subWalletConnector })}
+            onClick={() => connect({ connector:  walletConnect({ projectId }) })}
             disabled={isPending}
           >
-            {isPending ? "Connecting..." : "Connect SubWallet"}
-          </Button> */}
+            {isPending ? "Connecting..." : "Connect walletConnect"}
+          </Button>
         </>
       )}
     </div>
