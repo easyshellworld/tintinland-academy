@@ -246,7 +246,7 @@ export const subWalletConnector = injected({
               }
               
               case 'personal_sign': {
-                const [message, address] = params as [string, string];
+                const [message] = params as [string, string];
                 const { signature } = await extension.signer.signRaw({
                   data: message
                 });
@@ -262,7 +262,7 @@ export const subWalletConnector = injected({
               }
               
               case 'eth_sign': {
-                const [address, message] = params as [string, string];
+                const [ message] = params as [string, string];
                 const { signature } = await extension.signer.signRaw({
                   data: message
                 });
@@ -326,6 +326,7 @@ export const subWalletConnector = injected({
           try {
             return !!window.injectedWeb3?.['subwallet-js'];
           } catch (e) {
+            console(e)
             return false;
           }
         },
