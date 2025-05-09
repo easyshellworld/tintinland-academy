@@ -30,7 +30,7 @@ function AdminContent() {
       case "notes":
         return <NotesManagement />;  
       default:
-        return <div>请选择一个管理功能</div>;
+        return <AnnouncementManagement />;
     }
   };
 

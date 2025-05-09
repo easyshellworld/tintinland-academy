@@ -23,18 +23,18 @@ OneBlock-Academy 是一个基于现代Web3与区块链技术的在线学习与�
    * 管理员统一审批注册数据
 2. **工作人员管理**：
    * 教师/助教账户创建与权限分配
-   * 管理员对教职工进行增删改查操作
+   * 管理员对工作人员进行增删改查操作
 3. **公共资源管理**：
    * 文件、课程资料与学习材料的上传、分类与下载
 4. **学习笔记管理**：
    * 学员可基于 Markdown 记录、编辑与查看学习笔记
-   * 管理员与教师可对公共笔记进行共享
+   * 对学习笔记进行共享
 5. **答题卡管理**：
    * 考试题库 
-   * 学员在线作答、自动保存与提交
+   * 学员在线作答与提交
 6. **成绩管理**：
    * 自动批阅、人工评分与成绩统计
-   * 成绩排名、导出 PDF 报告
+   * 成绩排名
 7. **毕业 Claim 管理**：
    * 通过合约工厂定义毕业奖励领取流程
    * 学员完成所有模块后，调用智能合约领取链上奖励
@@ -53,15 +53,17 @@ nvm install --lts && nvm use --lts
 npm install
 
 # 4. 配置环境变量
-cp .env.example .env
+cp .env.example .env.local
 # 填写：
 # NEXTAUTH_SECRET=a8f9b3c1d4e762509a3718652f4d8c56
 # NEXT_PUBLIC_ITEM_TITLE="Oneblock Academy"  #项目标题名
 # INITIAL_STUDENT_ID=1799          # 初始化学员编号
 # NEXT_PUBLIC_CLAIM_FACTORY=0x85d08E78856A6071c332D9C7a418679D6dED2265 生成claaim
-# ADMIN_ADDRESS=初始化管理员钱包地址
 
-# 5. 数据库迁移与初始化
+# 需要在.env环境下（非.env.local环境,供应初始化数据库）
+# ADMIN_ADDRESS=初始化管理员钱包地址  
+
+# 5. 数据库初始化
 npm run db:init
 
 # 6. 启动开发服务器
@@ -72,15 +74,42 @@ npm run dev
 npm run  build 
 npm run  start
 
-# 9.智能合约部署
+```
+
+## 智能合约部署与测试
+* 合约编译环境为：hardhat 2.22.19 + resolc + solc-linux-amd64-v0.8.28+commit.7893614a
+* 编译参数模板：
+   ```
+      optimizer: {
+        enabled: true,
+        mode: "z",
+			  fallback_to_optimizing_for_size: true,
+        parameters: "1",
+        runs: 400,
+      },
+      standardJson: true,
+   ```
+* 部署测试命令
+
+```
+# 部署环境参数：
+PRIVATE_KEY=  # 私钥
+RPC_URL=https://westend-asset-hub-eth-rpc.polkadot.io
+
+# 本地测试环境测试：
+PRIVATE_KEY=  # 私钥
+RPC_URL=http://127.0.0.1:8545
+
+# 1.智能合约部署
 node ./contracts/deploy.js  #暂时为js，后期可能调整
 
-# 10.智能合约测试
-node ./contracts/deploy-test.js  #暂时为js，后期可能调整
+# 2.智能合约测试
+node ./contracts/deploy-test.js  #暂时为js，后期可能调整 建议本地节点节点测试
 
 ```
 
 ## 演示地址
+![管理页面](./snapshots/1.PNG)
 ```
 演示地址:
 https://oneblock-academy.netlify.app
@@ -109,7 +138,7 @@ https://oneblock-academy.netlify.app
 │   ├── lib/               # 数据库交互逻辑
 │   ├── components/        # 公共 UI 组件（shadcn/ui）
 │   ├── styles/            # 全局与模块化样式
-│   └── pages/api/         # API 路由（注册、笔记、考试、claim 等）
+│   └── app/api/         # API 路由（注册、笔记、考试、claim 等）
 ├── data/                  # SQLite 数据库文件
 ├── contracts/             # 智能合约源码
 ├── scripts/               # 初始化脚本

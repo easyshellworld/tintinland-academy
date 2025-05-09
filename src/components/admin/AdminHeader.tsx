@@ -77,7 +77,7 @@ export function AdminHeader({
     { id: "notes", label: "学习笔记管理" },
     { id: "answers", label: "答题卡管理" },
     { id: "grades", label: "成绩管理" },
-    { id: "certificates", label: "毕业证书生成" },
+    { id: "certificates", label: "毕业claim生成" },
   ];
 
     return (

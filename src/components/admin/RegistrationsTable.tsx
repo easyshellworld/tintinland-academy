@@ -98,7 +98,7 @@ export function RegistrationsTable({
               <TableHead className="w-[180px]">Student Name</TableHead>
               <TableHead>学号</TableHead>
               <TableHead>微信号</TableHead>
-              <TableHead>学历</TableHead>
+              <TableHead>email</TableHead>
              {/*  <TableHead>钱包地址</TableHead> */}
               <TableHead>Date</TableHead>
               <TableHead>Status</TableHead>
@@ -128,7 +128,7 @@ export function RegistrationsTable({
                   <TableCell className="font-medium">{registration.student_name}</TableCell>
                   <TableCell>{registration.student_id}</TableCell>
                   <TableCell>{registration.wechat_id}</TableCell>
-                  <TableCell>{registration.university}</TableCell>
+                  <TableCell>{registration.email}</TableCell>
                   {/* <TableCell>{registration.wallet_address}</TableCell> */}
                   <TableCell>{formatDate(registration.created_at)}</TableCell>
                   <TableCell>

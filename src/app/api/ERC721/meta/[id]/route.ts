@@ -14,7 +14,7 @@ export async function GET(
   const metadata = {
 
     description: "oneblock",
-    image: "https://xxxx.netlify.app/oneblock.jpg",
+    image: "https://oneblock-academy.netlify.app/logo2.jpg",
     name: "oneblock",
   };
 

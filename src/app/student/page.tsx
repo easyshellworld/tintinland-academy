@@ -39,7 +39,7 @@ function AdminContent() {
        case "certificates":
          return <CertificateGeneration />;  */
       default:
-        return <div>请选择一个管理功能</div>;
+        return <AnnouncementViewer />;;
     }
   };
 
