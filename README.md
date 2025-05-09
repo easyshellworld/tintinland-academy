@@ -2,6 +2,9 @@
 
 OneBlock-Academy 是一个基于现代Web3与区块链技术的在线学习与奖励平台，旨在为web3教育培训机构提供一站式的学员注册、课程管理、学习笔记、答题考试、成绩评估以及毕业奖励领取的完整解决方案。
 
+## team
+Alice 1593
+
 ## 开发背景
 
 随着在线教育和区块链技术的快速发展，传统学习平台往往在用户身份管理、学习数据安全、激励机制与透明度方面存在不足。OneBlock-Academy项目结合Next.js、shadcn、Tailwind CSS、SQLite以及智能合约技术，利用web3钱包身份鉴权，打破了中心化的限制，为管理员、教师与学员提供了安全、高效、模块化的学习与奖励管理系统。通过工厂模式智能合约按需求生成新claim项目智能合约（包含白名单合约，NFT合约，claim合约，支持调用第三方ERC20合约token奖励）。
@@ -58,7 +61,7 @@ cp .env.example .env.local
 # NEXTAUTH_SECRET=a8f9b3c1d4e762509a3718652f4d8c56
 # NEXT_PUBLIC_ITEM_TITLE="Oneblock Academy"  #项目标题名
 # INITIAL_STUDENT_ID=1799          # 初始化学员编号
-# NEXT_PUBLIC_CLAIM_FACTORY=0x85d08E78856A6071c332D9C7a418679D6dED2265 生成claaim
+# NEXT_PUBLIC_CLAIM_FACTORY=0x85d08E78856A6071c332D9C7a418679D6dED2265 生成claim的工厂合约，已部署在westend-asset-hub-eth
 
 # 需要在.env环境下（非.env.local环境,供应初始化数据库）
 # ADMIN_ADDRESS=初始化管理员钱包地址  
@@ -92,11 +95,11 @@ npm run  start
 * 部署测试命令
 
 ```bash
-# 部署环境参数：
+# 部署环境参数：（需要在.env）
 PRIVATE_KEY=  # 私钥
 RPC_URL=https://westend-asset-hub-eth-rpc.polkadot.io
 
-# 本地测试环境测试：
+# 本地测试环境测试：（需要在.env）
 PRIVATE_KEY=  # 私钥
 RPC_URL=http://127.0.0.1:8545
 
@@ -140,7 +143,7 @@ https://oneblock-academy.netlify.app
 │   ├── styles/            # 全局与模块化样式
 │   └── app/api/         # API 路由（注册、笔记、考试、claim 等）
 ├── data/                  # SQLite 数据库文件
-├── contracts/             # 智能合约源码
+├── contracts/             # 智能合约源码以及ABI、bytecode
 ├── scripts/               # 初始化脚本
 ├── .env.example           # 环境变量模板（双模板）
 ├── README.md
