@@ -45,7 +45,7 @@ next-env.d.ts
 
 /pic
 dev.md
-data/
+#data/
 /ppt_png
 ppt.md
 /ppt
