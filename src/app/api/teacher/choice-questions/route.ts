@@ -8,50 +8,47 @@ import {
   ChoiceQuestion
 } from '@/lib/db/query/choiceQuestions';
 
-// 设置为仅处理POST请求
+// 设置为仅处理 POST 请求
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { action, ...data } = body;
 
-    // 根据action参数执行不同操作
     switch (action) {
-      case 'get':
-        // 获取所有选择题
-        const questions = getAllChoiceQuestions();
+      case 'get': {
+        const questions = await getAllChoiceQuestions();
         return NextResponse.json({ success: true, data: questions });
+      }
 
-      case 'add':
-        // 添加选择题
+      case 'add': {
         if (Array.isArray(data.questions)) {
-          // 批量添加一组题目
-          data.questions.forEach((question: ChoiceQuestion) => {
-            addChoiceQuestion(question);
-          });
+          const results = await Promise.all(
+            data.questions.map(async (question: ChoiceQuestion) => {
+              return await addChoiceQuestion(question);
+            })
+          );
           return NextResponse.json({ 
             success: true, 
-            message: `Successfully added ${data.questions.length} questions` 
+            message: `Successfully added ${results.length} questions` 
           });
         } else {
-          // 添加单个题目
-          addChoiceQuestion(data.question);
+          await addChoiceQuestion(data.question);
           return NextResponse.json({ 
             success: true, 
             message: 'Successfully added question' 
           });
         }
+      }
 
-      case 'update':
-        // 更新选择题
+      case 'update': {
         if (!data.id) {
           return NextResponse.json(
             { success: false, error: 'Question ID is required' },
             { status: 400 }
           );
         }
-        
-        const updateResult = updateChoiceQuestion(data.id, data.updates);
-        
+
+        const updateResult = await updateChoiceQuestion(data.id, data.updates);
         if (updateResult.success) {
           return NextResponse.json({ 
             success: true, 
@@ -64,9 +61,9 @@ export async function POST(request: NextRequest) {
             { status: 400 }
           );
         }
+      }
 
-      case 'delete':
-        // 删除选择题
+      case 'delete': {
         if (!data.id) {
           return NextResponse.json(
             { success: false, error: 'Question ID is required' },
@@ -74,8 +71,7 @@ export async function POST(request: NextRequest) {
           );
         }
         
-        const deleteResult = deleteChoiceQuestion(Number(data.id));
-        
+        const deleteResult = await deleteChoiceQuestion(Number(data.id));
         if (deleteResult.success) {
           return NextResponse.json({ 
             success: true, 
@@ -88,29 +84,30 @@ export async function POST(request: NextRequest) {
             { status: 400 }
           );
         }
+      }
 
-        case 'deleteByTask':
-          if (!data.taskNumber && data.taskNumber !== 0) {
-            return NextResponse.json(
-              { success: false, error: 'Task number is required' },
-              { status: 400 }
-            );
-          }
-  
-          const deleteByTaskResult = deleteChoiceQuestionsByTaskNumber(Number(data.taskNumber));
-          
-          if (deleteByTaskResult.success) {
-            return NextResponse.json({ 
-              success: true, 
-              message: `Successfully deleted ${deleteByTaskResult.changes} questions for task ${data.taskNumber}`,
-              changes: deleteByTaskResult.changes
-            });
-          } else {
-            return NextResponse.json(
-              { success: false, error: deleteByTaskResult.error },
-              { status: 400 }
-            );
-          }
+      case 'deleteByTask': {
+        if (typeof data.taskNumber !== "number") {
+          return NextResponse.json(
+            { success: false, error: 'Task number is required' },
+            { status: 400 }
+          );
+        }
+
+        const deleteByTaskResult = await deleteChoiceQuestionsByTaskNumber(Number(data.taskNumber));
+        if (deleteByTaskResult.success) {
+          return NextResponse.json({ 
+            success: true, 
+            message: `Successfully deleted ${deleteByTaskResult.changes} questions for task ${data.taskNumber}`,
+            changes: deleteByTaskResult.changes
+          });
+        } else {
+          return NextResponse.json(
+            { success: false, error: deleteByTaskResult.error },
+            { status: 400 }
+          );
+        }
+      }
 
       default:
         return NextResponse.json(
