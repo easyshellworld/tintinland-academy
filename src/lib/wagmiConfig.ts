@@ -48,4 +48,3 @@ export const config = createConfig({
     [assetHubWestendTestnet.id]: http(),
   },
 })
-

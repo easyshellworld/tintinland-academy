@@ -2,12 +2,15 @@
 
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { metaMask } from "wagmi/connectors";
+//import { subWalletConnector } from "@/lib/subwallet";
 import { Button } from "@/components/ui/button";
 
 export function ConnectWallet() {
   const { address, isConnected } = useAccount();
   const { connect, isPending } = useConnect();
   const { disconnect } = useDisconnect();
+
+  //const subWallet = connectors.find((c) => c.id === subWalletConnector.id);
 
   return (
     <div className="flex flex-col items-center space-y-2">
@@ -19,6 +22,7 @@ export function ConnectWallet() {
           </Button>
         </>
       ) : (
+        <>
         <Button
           variant="default"
           onClick={() => connect({ connector: metaMask() })}
@@ -26,6 +30,16 @@ export function ConnectWallet() {
         >
           {isPending ? "Connecting..." : "Connect MetaMask"}
         </Button>
+   
+          {/* SubWallet 按钮 */}
+    {/*       <Button
+            variant="default"
+            onClick={() => connect({ connector: subWalletConnector })}
+            disabled={isPending}
+          >
+            {isPending ? "Connecting..." : "Connect SubWallet"}
+          </Button> */}
+        </>
       )}
     </div>
   );

@@ -73,10 +73,29 @@ npm run  build
 npm run  start
 
 # 9.智能合约部署
-node ./contracts/deploy.js
+node ./contracts/deploy.js  #暂时为js，后期可能调整
 
 # 10.智能合约测试
-node ./contracts/deploy-test.js
+node ./contracts/deploy-test.js  #暂时为js，后期可能调整
+
+```
+
+## 演示地址
+```
+演示地址:
+https://oneblock-academy.netlify.app
+
+演示所使用账户地址与密钥：
+管理员：  地址: 0x85E9D949b0897DAb7B3Cf8B29f46aCEa16aB3271, 
+         私钥: 0x6200be1ec8844cde8564b0468b91dc64b08a957755b8ec22e1af1527c0098432
+老师:    地址: 0xe7788133f4b99876498866e7E53dE4C4a2b90113, 
+         私钥: 0xd55a8a17d8721d6162ee025a955625e17dc11c56802d2b930d68607699cf7492
+助教：   地址: 0x1f8665788d7973CB8797A097E85f7d4f4a3892AB, 
+         私钥: 0xe5a3ab6fba6a2cb0eba373a7b1127d784d16590985f3349a27d65be95e925994
+学员：   地址: 0x3FD810bB2729a838e942F7C3a4be63973B210aF8, 
+        私钥: 0xfa69f8b57066e48715fe3f926bd32e1e6990f854f31dd533aab31df564280d40
+        地址: 0x58ae1A14EFCc975BD395728F16B128B0497431E4, 
+        私钥: 0x4fdb9840f5fc3b82184b5e80b442b55c3512dc8c536abfcb652744885c1b651d
 
 ```
 
