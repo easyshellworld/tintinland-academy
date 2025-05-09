@@ -326,7 +326,7 @@ export const subWalletConnector = injected({
           try {
             return !!window.injectedWeb3?.['subwallet-js'];
           } catch (e) {
-            console(e)
+            console.log(e)
             return false;
           }
         },
