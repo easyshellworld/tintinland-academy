@@ -131,7 +131,7 @@ export default function Register() {
 
   return (
     <div className="p-6 max-w-lg mx-auto space-y-4">
-      <h2 className="text-xl font-bold">报名信息（3月7日开课）</h2>
+      <h2 className="text-xl font-bold">报名信息</h2>
       {error && <p className="text-red-500">{error}</p>}
 
       {/* 01 */}

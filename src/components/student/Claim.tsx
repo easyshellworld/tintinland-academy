@@ -463,7 +463,7 @@ export function StudentClaimComponent() {
 
   return (
     <div className="p-6 max-w-3xl mx-auto bg-white rounded-lg shadow">
-      <h1 className="text-2xl font-bold mb-6">学生项目代币领取</h1>
+      <h1 className="text-2xl font-bold mb-6">学员项目claim领取</h1>
 
       {/* Query Button */}
       <div className="mb-6">
@@ -472,7 +472,7 @@ export function StudentClaimComponent() {
           disabled={loading || !studentId}
           className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:bg-blue-300"
         >
-          {loading ? '加载中...' : '查询项目信息'}
+          {loading ? '加载中...' : '查询claim项目信息'}
         </button>
         {error && <p className="text-red-500 mt-2">{error}</p>}
       </div>
