@@ -75,7 +75,7 @@ export function CreateProjectForm({ onProjectCreated }: CreateProjectFormProps) 
     try {
       const factoryAddress = (process.env.NEXT_PUBLIC_CLAIM_FACTORY as `0x${string}`) || '0x';
       const projectIdBytes = encodeProjectId(projectName);
-
+      const parseEtherdeposit=parseEther(deposit);
       // 发送合约交易
       const txHash = await writeContractAsync({
         address: factoryAddress,
@@ -87,7 +87,7 @@ export function CreateProjectForm({ onProjectCreated }: CreateProjectFormProps) 
           projectName,
           symbol,
           baseURI,
-          parseEther(deposit)
+          parseEtherdeposit
         ]
       });
 
@@ -168,7 +168,7 @@ export function CreateProjectForm({ onProjectCreated }: CreateProjectFormProps) 
         required
       />
       <Input
-        placeholder="项目名称"
+        placeholder="项目名称以及NFT名"
         value={projectName}
         onChange={e => setProjectName(e.target.value)}
         required

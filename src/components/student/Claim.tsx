@@ -4,6 +4,7 @@ import { useAccount, useWriteContract, usePublicClient } from 'wagmi';
 import { useSession } from 'next-auth/react';
 import { decodeEventLog, formatEther } from 'viem';
 import Image from 'next/image';
+import CopyAddress from "@/components/CopyAddress";
 
 // Simplified ABIs
 const CLAIM_ABI = [
@@ -71,21 +72,59 @@ const NFT_ABI = [
     "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
     "stateMutability": "view",
     "type": "function"
-  }
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "owner", "type": "address" }
+    ],
+    "name": "balanceOf",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "owner", "type": "address" },
+      { "internalType": "uint256", "name": "index", "type": "uint256" }
+    ],
+    "name": "tokenOfOwnerByIndex",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "ownerOf",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
 ];
 
 // TypeScript 类型定义
 type Project = {
   project_id: string;
   project_name: string;
-  nft_address: string;
-  claim_address: string;
-  erc20_address: string;
+  nft_address: `0x${string}`;
+  claim_address: `0x${string}`;
+  erc20_address: `0x${string}`;
   has_claimed?: boolean;
   created_at?: string;
 };
 
-export  function StudentClaimComponent() {
+export function StudentClaimComponent() {
   const { address, isConnected } = useAccount();
   const publicClient = usePublicClient()!; // Non-null assertion as we expect it to be defined
   const { data: session } = useSession();
@@ -119,6 +158,68 @@ export  function StudentClaimComponent() {
       console.error('Error checking claim status:', err);
     }
   };
+
+
+  const getNftInfoByOwner = async (
+    nftAddress: `0x${string}`,
+    ownerAddress: `0x${string}`
+  ) => {
+    try {
+
+
+
+      // 1. 查询持有者 NFT 数量
+      const balance = (await publicClient.readContract({
+        address: nftAddress,
+        abi: NFT_ABI,
+        functionName: 'balanceOf',
+        args: [ownerAddress],
+      })) as bigint
+
+      if (balance <= BigInt(0)) {
+        console.log('用户未持有此NFT，显示默认图片')
+        setNftImage('/api/placeholder/400/400')
+      }
+      
+     // console.log(balance)
+
+      // 2 由于最多只有 1 个，只取 index 0
+
+ 
+      // 3. 读取 metadata URI
+      const rawUri = (await publicClient.readContract({
+        address: nftAddress,
+        abi: NFT_ABI,
+        functionName: 'tokenURI',
+        args: [BigInt(1)],
+      })) as string
+
+      // 4. IPFS 转换并 fetch metadata
+      const metadataUrl = rawUri.startsWith('ipfs://')
+        ? rawUri.replace('ipfs://', 'https://ipfs.io/ipfs/')
+        : rawUri
+
+      const res = await fetch(metadataUrl)
+      if (!res.ok) throw new Error(`Failed to fetch metadata: ${res.status}`)
+      const { image } = (await res.json()) as { image?: string }
+
+      // 5. 处理 image 的 IPFS URI
+      const imageUrl = image
+        ? image.startsWith('ipfs://')
+          ? image.replace('ipfs://', 'https://ipfs.io/ipfs/')
+          : image
+        : '/api/placeholder/400/400'
+
+      setNftImage(imageUrl)
+    } catch (err) {
+      console.error('getNftInfoByOwner error:', err)
+      setNftImage('/api/placeholder/400/400')
+    }
+  }
+
+
+
+
 
   // Get claim quota
   const getClaimQuota = async (claimAddress: string) => {
@@ -171,7 +272,16 @@ export  function StudentClaimComponent() {
       // Note: We would typically fetch the tokenURI for a specific tokenId
       // For display purposes, we're not fetching the actual image here
       // In a real implementation, you would need to determine which tokenId to use
-      setNftImage('/api/placeholder/400/400');
+
+
+      /*   const gettokenURI = (await publicClient.readContract({
+          address: nftAddress as `0x${string}`,
+          abi: NFT_ABI,
+          functionName: 'tokenURI',
+          args: [tokenId],
+        })) as string */
+       
+     // setNftImage('/api/placeholder/400/400');
     } catch (err) {
       console.error('Error getting NFT info:', err);
     }
@@ -186,7 +296,7 @@ export  function StudentClaimComponent() {
 
     setLoading(true);
     setError('');
-    
+
     try {
       const response = await fetch('/api/student/claim', {
         method: 'POST',
@@ -200,7 +310,7 @@ export  function StudentClaimComponent() {
       });
 
       const data = await response.json();
-      
+
       if (data.error) {
         setError(data.error);
         return;
@@ -209,17 +319,18 @@ export  function StudentClaimComponent() {
       if (data.projects) {
         // User has claimed projects in the past
         setProjects(data.projects);
-        
+
         // Set the first project as the current one for display
         if (data.projects.length > 0) {
           const currentProject = data.projects[0];
           setProject(currentProject);
-          
+
           // Get token and NFT info
-          if (currentProject.erc20_address) 
+          if (currentProject.erc20_address)
             await getTokenSymbol(currentProject.erc20_address);
           if (currentProject.nft_address)
             await getNftInfo(currentProject.nft_address);
+          //  await getNftInfoByOwner(data.project.nft_address,address)
           if (currentProject.claim_address && address) {
             await checkClaimed(currentProject.claim_address, address);
             await getClaimQuota(currentProject.claim_address);
@@ -228,15 +339,19 @@ export  function StudentClaimComponent() {
       } else if (data.project) {
         // Latest available project
         setProject(data.project);
-        
+
         // Get token and NFT info
         if (data.project.erc20_address)
           await getTokenSymbol(data.project.erc20_address);
-        if (data.project.nft_address)
+        if (data.project.nft_address )
           await getNftInfo(data.project.nft_address);
+         // await getNftInfoByOwner(data.project.nft_address,address)
         if (data.project.claim_address && address) {
           await checkClaimed(data.project.claim_address, address);
           await getClaimQuota(data.project.claim_address);
+          if (data.project.nft_address) {
+            await getNftInfoByOwner(data.project.nft_address, address);
+          }
         }
       }
     } catch (err) {
@@ -260,7 +375,7 @@ export  function StudentClaimComponent() {
     }
 
     setTransactionStatus('处理中...');
-    
+
     try {
       const hash = await writeContractAsync({
         address: project.claim_address as `0x${string}`,
@@ -269,10 +384,10 @@ export  function StudentClaimComponent() {
       });
 
       setTransactionStatus('交易已提交，等待确认...');
-      
+
       // Wait for transaction confirmation
       const receipt = await publicClient.waitForTransactionReceipt({ hash });
-      
+
       // Look for the Claimed event in the logs
       const claimedEvents = receipt.logs
         .filter(log => log.address.toLowerCase() === project.claim_address.toLowerCase())
@@ -294,7 +409,7 @@ export  function StudentClaimComponent() {
         await recordClaim(project);
         setTransactionStatus('领取成功！');
         setHasUserClaimed(true);
-        
+
         // Refresh token balance
         if (project.erc20_address) {
           const balance = await publicClient.readContract({
@@ -349,7 +464,7 @@ export  function StudentClaimComponent() {
   return (
     <div className="p-6 max-w-3xl mx-auto bg-white rounded-lg shadow">
       <h1 className="text-2xl font-bold mb-6">学生项目代币领取</h1>
-      
+
       {/* Query Button */}
       <div className="mb-6">
         <button
@@ -366,35 +481,35 @@ export  function StudentClaimComponent() {
       {project && (
         <div className="border rounded-lg p-4 mb-6">
           <h2 className="text-xl font-semibold mb-4">{project.project_name}</h2>
-          
+
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <h3 className="font-medium mb-2">代币信息</h3>
               <p className="mb-1"><span className="font-medium">代币符号:</span> {tokenSymbol || '加载中...'}</p>
-              <p className="mb-1"><span className="font-medium">代币地址:</span> {project.erc20_address}</p>
+              <p className="mb-1"><span className="font-medium">代币地址:</span>  <CopyAddress address={project.erc20_address}/></p>
               <p className="mb-1"><span className="font-medium">领取数量:</span> {claimQuota} {tokenSymbol}</p>
               <p className="mb-1"><span className="font-medium">当前余额:</span> {tokenBalance} {tokenSymbol}</p>
             </div>
-            
+
             <div>
               <h3 className="font-medium mb-2">NFT信息</h3>
               <p className="mb-1"><span className="font-medium">NFT符号:</span> {nftSymbol || '加载中...'}</p>
-              <p className="mb-1"><span className="font-medium">NFT地址:</span> {project.nft_address}</p>
-              
+              <p className="mb-1"><span className="font-medium">NFT地址:</span>  <CopyAddress address={project.nft_address}/></p>
+
               {nftImage && (
                 <div className="mt-4">
-                  <Image 
-                    src={nftImage} 
-                    alt="NFT预览图" 
-                    width={150} 
-                    height={150} 
+                  <Image
+                    src={nftImage}
+                    alt="NFT预览图"
+                    width={150}
+                    height={150}
                     className="rounded-md"
                   />
                 </div>
               )}
             </div>
           </div>
-          
+
           {/* Claim Button */}
           <div className="mt-6">
             {!isConnected ? (
@@ -412,7 +527,7 @@ export  function StudentClaimComponent() {
                 领取代币和NFT
               </button>
             )}
-            
+
             {transactionStatus && (
               <p className="mt-2 text-blue-600">{transactionStatus}</p>
             )}
