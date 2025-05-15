@@ -218,15 +218,15 @@ export function GradeManagement() {
                     <CardTitle>成绩管理</CardTitle>
                   </CardHeader>
                   <CardContent>      
-      {/* 学生筛选 */}
+      {/* 学员筛选 */}
       <div className="mb-6">
-        <label className="block mb-2 font-medium">选择学生：</label>
+        <label className="block mb-2 font-medium">选择学员：</label>
         <select
           className="w-full p-2 border rounded"
           value={selectedStudentId}
           onChange={e => setSelectedStudentId(e.target.value)}
         >
-          <option value="">所有学生</option>
+          <option value="">所有学员</option>
           {uniqueStudentIds.map(id => (
             <option key={id} value={id}>
               {scores.find(s => s.student_id === id)?.student_name ||
@@ -236,7 +236,7 @@ export function GradeManagement() {
         </select>
       </div>
 
-      {/* 学生统计 */}
+      {/* 学员统计 */}
       {selectedStudentId && (
         <div className="mb-6 p-4 bg-gray-100 rounded">
           {studentSummaries
@@ -318,7 +318,7 @@ export function GradeManagement() {
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block mb-1">学生ID:</label>
+              <label className="block mb-1">学员ID:</label>
               <input
                 type="text"
                 name="student_id"

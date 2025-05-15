@@ -38,7 +38,7 @@ export function getAllChoiceQuestions(): ChoiceQuestion[] {
   }));
 }
 
-// 获取不含答案的选择题（用于学生）
+// 获取不含答案的选择题（用于学员）
 export function getQuestionsWithoutAnswers(): Omit<ChoiceQuestion, 'correct_option'>[] {
   const rows = db.prepare(`
     SELECT id, task_number, question_number, question_text, options, score, created_at, updated_at 
@@ -121,7 +121,7 @@ export function deleteChoiceQuestion(id: number) {
   }
 }
 
-// 计算得分（传入学生答案）
+// 计算得分（传入学员答案）
 export function calculateChoiceScore(studentAnswers: { [questionId: number]: string }): number {
   let score = 0;
   const allQuestions = getAllChoiceQuestions();

@@ -116,7 +116,7 @@ export function updateTaskScore(
 }
 
 /**
- * 查询某个学生的所有记录（按任务编号升序）
+ * 查询某个学员的所有记录（按任务编号升序）
  */
 export function getTaskScoresByStudent(student_id: string): TaskScore[] {
   return db
@@ -132,7 +132,7 @@ export function getTaskScoresByStudent(student_id: string): TaskScore[] {
 }
 
 /**
- * 统计某个学生每道题得分汇总及 overall 总分/平均分/记录数
+ * 统计某个学员每道题得分汇总及 overall 总分/平均分/记录数
  */
 export function getStudentScoreSummary(student_id: string): {
   perTask: TaskSummary[]
@@ -183,7 +183,7 @@ export function getRawScores(): RawScore[] {
       `
       SELECT
         ts.student_id,
-        NULL AS student_name,  /* 由于没有 registrations 表，暂时返回 NULL */
+        r.student_name AS student_name,
         ts.task_number,
         ts.score_type,
         ts.score

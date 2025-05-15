@@ -20,7 +20,7 @@ import { Registration } from "@/lib/db/query/registrations";
 
 const fieldLabels: Record<keyof Registration, string> = {
   id: "编号",
-  student_name: "学生姓名",
+  student_name: "学员姓名",
   wechat_id: "微信 ID",
   phone: "电话号码",
   email: "电子邮箱",
@@ -43,7 +43,7 @@ const fieldLabels: Record<keyof Registration, string> = {
   wants_private_service: "是否需要一对一辅导",
   referrer: "推荐人",
   wallet_address: "钱包地址",
-  student_id: "学生 ID",
+  student_id: "学员 ID",
   approved: "审核状态",
   created_at: "创建时间",
   updated_at: "更新时间",

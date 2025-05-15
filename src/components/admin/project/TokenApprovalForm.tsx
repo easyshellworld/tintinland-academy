@@ -172,7 +172,7 @@ export function TokenApprovalForm({
             <span>{tokenAmount}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">学生数量:</span>
+            <span className="text-muted-foreground">学员数量:</span>
             <span>{studentCount} 人</span>
           </div>
           <div className="flex justify-between">

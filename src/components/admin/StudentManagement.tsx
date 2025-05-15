@@ -181,8 +181,8 @@ export function StudentManagement() {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-4">学生注册管理</h2>
-      <p className="text-gray-500 mb-6">审核、批准和管理学生注册</p>
+      <h2 className="text-2xl font-semibold mb-4">学员注册管理</h2>
+      <p className="text-gray-500 mb-6">审核、批准和管理学员注册</p>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2">

@@ -16,7 +16,7 @@ export function getAllStudentNotes(): StudentNote[] {
   return db.prepare('SELECT * FROM student_notes ORDER BY created_at DESC').all() as StudentNote[];
 }
 
-// 获取指定学生的所有笔记
+// 获取指定学员的所有笔记
 export function getNotesByStudentId(studentId: string): StudentNote[] {
   return db.prepare('SELECT * FROM student_notes WHERE student_id = ? ORDER BY created_at DESC').all(studentId) as StudentNote[];
 }

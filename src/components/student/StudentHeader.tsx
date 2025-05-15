@@ -3,12 +3,13 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { CalendarClock, LogOut, User, CreditCard, Wallet } from "lucide-react";
-import { useAccount, useDisconnect } from 'wagmi';
+import { CalendarClock, LogOut, User, CreditCard, Wallet, RefreshCcw } from "lucide-react";
+import { useAccount, useDisconnect, useReconnect } from 'wagmi';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAdmin, AdminView } from "@/components/AdminContext";
+import { metaMask } from "wagmi/connectors";
 
 // 组件属性定义
 interface AdminHeaderProps {
@@ -18,18 +19,28 @@ interface AdminHeaderProps {
 
 const getTitle = () => process.env.NEXT_PUBLIC_ADMIN_TITLE || "oneblock academy 学习平台";
 
-export function StudentHeader({ 
+export function StudentHeader({
   title: propTitle,
-  description = "区块链课程学习系统" 
+  description = "区块链课程学习系统"
 }: AdminHeaderProps) {
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const router = useRouter();
   const { activeView, setActiveView } = useAdmin();
   const { data: session } = useSession();
-  
+
   const [title, setTitle] = useState("");
-  
+  const { reconnect, status } = useReconnect()
+
+
+  const metaMaskConnector = metaMask();
+  function handleReconnect() {
+
+    reconnect({ connectors: [metaMaskConnector] });
+
+  }
+
+
   // 获取当前日期
   const currentDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -69,7 +80,7 @@ export function StudentHeader({
   const userName = session?.user?.name || "未登录";
   const userId = session?.user?.id || "";
   const userAddress = session?.user?.address || "";
-  
+
   // 格式化钱包地址显示
   const formatAddress = (address: string) => {
     if (!address) return "";
@@ -88,7 +99,7 @@ export function StudentHeader({
               {description && <p className="text-gray-500 mt-1">{description}</p>}
             </div>
           </div>
-          
+
           <div className="flex flex-col sm:flex-row items-start sm:items-center mt-4 sm:mt-0">
             {/* 用户信息部分 */}
             <div className="flex flex-col mr-6 text-sm">
@@ -112,7 +123,7 @@ export function StudentHeader({
                 <CalendarClock className="mr-2 h-4 w-4" />
                 {currentDate}
               </div>
-              {isConnected && (
+              {isConnected ? (
                 <Button
                   variant="outline"
                   size="sm"
@@ -122,22 +133,31 @@ export function StudentHeader({
                   <LogOut className="mr-2 h-4 w-4" />
                   登出
                 </Button>
+              ) : (
+                <Button disabled={status === 'pending'}
+                  variant="outline"
+                  size="sm"
+                  onClick={handleReconnect}
+                  className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                >
+                  <RefreshCcw className="mr-2 h-4 w-4" />
+                  {status === 'pending' ? '重连中…' : '重连钱包'}
+                </Button>
               )}
             </div>
           </div>
         </div>
-        
+
         {/* 导航菜单 */}
         <nav className="flex items-center space-x-2 overflow-x-auto py-2">
           {viewOptions.map((option) => (
             <button
               key={option.id}
               onClick={() => setActiveView(option.id)}
-              className={`px-4 py-2 rounded-md transition-colors duration-200 whitespace-nowrap ${
-                activeView === option.id
-                  ? "bg-blue-600 text-white" 
-                  : "text-blue-600 border border-blue-600 hover:bg-blue-100"
-              }`}
+              className={`px-4 py-2 rounded-md transition-colors duration-200 whitespace-nowrap ${activeView === option.id
+                ? "bg-blue-600 text-white"
+                : "text-blue-600 border border-blue-600 hover:bg-blue-100"
+                }`}
             >
               {option.label}
             </button>

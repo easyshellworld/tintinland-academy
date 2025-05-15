@@ -18,7 +18,7 @@ import {
   TableRow
 } from '@/components/ui/table';
 
-// 定义学生分数数据类型
+// 定义学员分数数据类型
 interface StudentScore {
   student_id: string;
   student_name: string;
@@ -70,8 +70,8 @@ export function StudentRewardsWorkflow() {
         setStudents(data);
         setFilteredStudents(data);
       } catch (error) {
-        console.error('获取学生数据错误:', error);
-        toast.error(`获取学生数据错误: ${error instanceof Error ? error.message : '未知错误'}`);
+        console.error('获取学员数据错误:', error);
+        toast.error(`获取学员数据错误: ${error instanceof Error ? error.message : '未知错误'}`);
       }
     };
 
@@ -91,15 +91,15 @@ export function StudentRewardsWorkflow() {
     const filtered = students.filter(student => student.total_score >= minScore);
     setFilteredStudents(filtered);
     if (filtered.length === 0) {
-      toast.error('未找到符合条件的学生，请调整最低分数后重试');
+      toast.error('未找到符合条件的学员，请调整最低分数后重试');
     } else {
-      toast.success(`筛选成功，找到 ${filtered.length} 名符合条件的学生`);
+      toast.success(`筛选成功，找到 ${filtered.length} 名符合条件的学员`);
     }
   };
 
   const handleConfirmAddresses = () => {
     if (filteredStudents.length === 0) {
-      toast.error('无学生地址可确认，请先筛选学生');
+      toast.error('无学员地址可确认，请先筛选学员');
       return;
     }
     setCurrentStep(WorkflowStep.CREATE_PROJECT);
@@ -113,7 +113,7 @@ export function StudentRewardsWorkflow() {
   }) => {
     setProjectData(data);
     setCurrentStep(WorkflowStep.ADD_TO_WHITELIST);
-    toast.success('项目创建成功，请继续将学生添加到白名单');
+    toast.success('项目创建成功，请继续将学员添加到白名单');
   };
 
   const handleWhitelistAdded = () => {
@@ -145,8 +145,8 @@ export function StudentRewardsWorkflow() {
           <>
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle>筛选学生</CardTitle>
-                <CardDescription>根据分数筛选符合条件的学生</CardDescription>
+                <CardTitle>筛选学员</CardTitle>
+                <CardDescription>根据分数筛选符合条件的学员</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center space-x-4 mb-4">
@@ -157,11 +157,11 @@ export function StudentRewardsWorkflow() {
                     onChange={(e) => setMinScore(Number(e.target.value))}
                     className="w-32"
                   />
-                  <Button onClick={handleFilterStudents}>筛选学生</Button>
+                  <Button onClick={handleFilterStudents}>筛选学员</Button>
                 </div>
 
                 <div className="mb-4">
-                  <h3 className="text-sm font-medium mb-2">符合条件的学生: {filteredStudents.length} 人</h3>
+                  <h3 className="text-sm font-medium mb-2">符合条件的学员: {filteredStudents.length} 人</h3>
                 </div>
 
                 <div className="flex items-center space-x-4 mb-4">
@@ -187,16 +187,16 @@ export function StudentRewardsWorkflow() {
 
             <Card>
               <CardHeader>
-                <CardTitle>学生列表</CardTitle>
-                <CardDescription>符合条件的学生名单</CardDescription>
+                <CardTitle>学员列表</CardTitle>
+                <CardDescription>符合条件的学员名单</CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
-                  <TableCaption>共 {filteredStudents.length} 名学生</TableCaption>
+                  <TableCaption>共 {filteredStudents.length} 名学员</TableCaption>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>学生姓名</TableHead>
-                      <TableHead>学生ID</TableHead>
+                      <TableHead>学员姓名</TableHead>
+                      <TableHead>学员ID</TableHead>
                       <TableHead>钱包地址</TableHead>
                       <TableHead className="text-right">总分</TableHead>
                     </TableRow>
@@ -222,7 +222,7 @@ export function StudentRewardsWorkflow() {
           <Card>
             <CardHeader>
               <CardTitle>创建项目</CardTitle>
-              <CardDescription>为{filteredStudents.length}名学生创建奖励项目</CardDescription>
+              <CardDescription>为{filteredStudents.length}名学员创建奖励项目</CardDescription>
             </CardHeader>
             <CardContent>
               <CreateProjectForm onProjectCreated={handleProjectCreated} />
@@ -236,7 +236,7 @@ export function StudentRewardsWorkflow() {
           <Card>
             <CardHeader>
               <CardTitle>添加白名单</CardTitle>
-              <CardDescription>将{filteredStudents.length}名学生添加到白名单</CardDescription>
+              <CardDescription>将{filteredStudents.length}名学员添加到白名单</CardDescription>
             </CardHeader>
             <CardContent>
               <WhitelistBatchAddForm
@@ -272,9 +272,9 @@ export function StudentRewardsWorkflow() {
   return (
     <div className="container mx-auto py-8 space-y-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">学生奖励流程</h1>
+        <h1 className="text-2xl font-bold">学员奖励流程</h1>
         <div className="flex space-x-2 text-sm">
-          <div className={`px-3 py-1 rounded-full ${currentStep === WorkflowStep.FILTER_STUDENTS ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>筛选学生</div>
+          <div className={`px-3 py-1 rounded-full ${currentStep === WorkflowStep.FILTER_STUDENTS ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>筛选学员</div>
           <div className={`px-3 py-1 rounded-full ${currentStep === WorkflowStep.CREATE_PROJECT ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>创建项目</div>
           <div className={`px-3 py-1 rounded-full ${currentStep === WorkflowStep.ADD_TO_WHITELIST ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>添加白名单</div>
           <div className={`px-3 py-1 rounded-full ${currentStep === WorkflowStep.APPROVE_TOKENS ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>授权转账</div>

@@ -290,7 +290,7 @@ export function StudentClaimComponent() {
   // Fetch project data from API
   const fetchProjectData = async () => {
     if (!studentId) {
-      setError('请输入学生ID');
+      setError('请输入学员ID');
       return;
     }
 

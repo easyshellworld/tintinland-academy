@@ -67,7 +67,7 @@ export function WhitelistBatchAddForm({
     }
 
     if (addresses.length === 0) {
-      toast.error('请确保有有效的学生钱包地址', {
+      toast.error('请确保有有效的学员钱包地址', {
         description: '没有可添加的地址',
       });
       return;

@@ -206,7 +206,7 @@ export default function Register() {
       {/* 11 */}
       <div>
         <label className="block mb-1">*目前是（可多选）：</label>
-        {['Web3 在职开发者','Web3 独立开发者','Web2 在职开发者','Web2 独立开发者','学生，未就业','其他'].map((opt)=> (
+        {['Web3 在职开发者','Web3 独立开发者','Web2 在职开发者','Web2 独立开发者','学员，未就业','其他'].map((opt)=> (
           <label key={opt} className="mr-4 block">
             <input type="checkbox" name="status" value={opt} checked={formData.status.includes(opt)} onChange={handleInputChange}/> {opt}
           </label>
