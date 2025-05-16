@@ -86,7 +86,7 @@ npm run  start
       optimizer: {
         enabled: true,
         mode: "z",
-			  fallback_to_optimizing_for_size: true,
+		  fallback_to_optimizing_for_size: true,
         parameters: "1",
         runs: 400,
       },
@@ -112,7 +112,7 @@ node ./contracts/deploy-test.js  #暂时为js，后期可能调整 建议本地�
 ```
 
 ## 演示地址
-![管理页面](./snapshots/1.PNG)
+![管理页面](./snapshots/1.gif)
 ```
 演示地址:
 https://oneblock-academy.netlify.app
@@ -139,11 +139,10 @@ https://oneblock-academy.netlify.app
 ├── src/
 │   ├── app/               # Next.js 路由与页面
 │   ├── lib/               # 数据库交互逻辑
-│   ├── components/        # 公共 UI 组件（shadcn/ui）
-│   ├── styles/            # 全局与模块化样式
+│   ├── components/        # 公共 UI 组件（shadcn/ui）   
 │   └── app/api/         # API 路由（注册、笔记、考试、claim 等）
 ├── data/                  # SQLite 数据库文件
-├── contracts/             # 智能合约源码以及ABI、bytecode
+├── contracts/             # 智能合约源码以及ABI、bytecode，部署测试脚本
 ├── scripts/               # 初始化脚本
 ├── .env.example           # 环境变量模板（双模板）
 ├── README.md

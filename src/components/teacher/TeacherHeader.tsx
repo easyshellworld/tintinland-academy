@@ -94,7 +94,7 @@ export function AdminHeader({
         {/* 顶部标题栏 */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 border-b">
           <div className="flex items-center">
-            <Image src="/logo.png" alt=" Logo" width={40} height={40} />
+            <Image src="/logo.png" alt=" Logo" width={100} height={100} />
             <div className="ml-4">
               <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
               {description && <p className="text-gray-500 mt-1">{description}</p>}

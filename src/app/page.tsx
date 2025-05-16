@@ -110,8 +110,8 @@ export default function Home() {
               <Image
                 src="/logo.png"
                 alt="oneblock Logo"
-                width={96}
-                height={96}
+                width={100}
+                height={100}
                 priority
               />
             </div>

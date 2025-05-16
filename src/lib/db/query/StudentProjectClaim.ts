@@ -22,8 +22,14 @@ export function insertStudentProjectClaim(data: {
   `);
 
   return stmt.run({
-    ...data,
-    has_claimed: data.has_claimed ?? 1,
+    student_id: data.student_id ?? "",
+    project_id: data.project_id ?? "",
+    project_name: data.project_name ?? "",
+    nft_address: data.nft_address ?? "",
+    claim_address: data.claim_address ?? "",
+    erc20_address: data.erc20_address ?? "",
+    has_claimed: data.has_claimed === undefined ? 1 : data.has_claimed ? 1 : 0,
+    
   });
 }
 

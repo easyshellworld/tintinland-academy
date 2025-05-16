@@ -334,6 +334,9 @@ export function StudentClaimComponent() {
           if (currentProject.claim_address && address) {
             await checkClaimed(currentProject.claim_address, address);
             await getClaimQuota(currentProject.claim_address);
+            if(currentProject.nft_address){
+              await getNftInfoByOwner(data.project.nft_address,address)
+            }
           }
         }
       } else if (data.project) {
@@ -343,11 +346,11 @@ export function StudentClaimComponent() {
         // Get token and NFT info
         if (data.project.erc20_address)
           await getTokenSymbol(data.project.erc20_address);
-        if (data.project.nft_address )
+        if (data.project.nft_address && address)
           await getNftInfo(data.project.nft_address);
-         // await getNftInfoByOwner(data.project.nft_address,address)
+        // await getNftInfoByOwner(data.project.nft_address,address)
         if (data.project.claim_address && address) {
-          await checkClaimed(data.project.claim_address, address);
+          await checkClaimed(data.project.claim_address,address);
           await getClaimQuota(data.project.claim_address);
           if (data.project.nft_address) {
             await getNftInfoByOwner(data.project.nft_address, address);

@@ -144,13 +144,19 @@ export function CreateProjectForm({ onProjectCreated }: CreateProjectFormProps) 
       if (!response.ok) {
         throw new Error('保存项目信息失败');
       }
-
+      
       onProjectCreated({
         whitelistAddr: args.whitelistContract,
         nftAddr: args.nftContract,
         claimAddr: args.claimContract,
         erc20Addr: tokenAddr as `0x${string}`
       });
+      alert(`
+        白名单合约Address: ${args.whitelistContract}
+        NFT合约Address: ${args.nftContract}
+        Claim合约Address: ${args.claimContract}
+        ERC20合约Address: ${tokenAddr}
+        `);
     } catch (err) {
       console.error(err);
       alert(`创建失败: ${err instanceof Error ? err.message : '未知错误'}`);
