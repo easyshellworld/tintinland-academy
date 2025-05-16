@@ -24,6 +24,6 @@
     "typeRoots": ["./types", "./node_modules/@types"],
     
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "tests/**/*","types/**/*.d.ts", "contracts/deploy-test.js", "contracts/deploy-test22.js", "src/lib/subwallet.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "tests/**/*","types/**/*.d.ts", "contracts/deploy-test.js", "contracts/deploy-test22.js", "src/lib/subwallet.js", "src/app/api/admin/adminclaim", "src/components/admin/project/DashboardSwitchertsx"],
   "exclude": ["node_modules"]
 }

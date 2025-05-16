@@ -335,7 +335,7 @@ export function StudentClaimComponent() {
             await checkClaimed(currentProject.claim_address, address);
             await getClaimQuota(currentProject.claim_address);
             if(currentProject.nft_address){
-              await getNftInfoByOwner(data.project.nft_address,address)
+              await getNftInfoByOwner(currentProject.nft_address,address)
             }
           }
         }
@@ -352,9 +352,9 @@ export function StudentClaimComponent() {
         if (data.project.claim_address && address) {
           await checkClaimed(data.project.claim_address,address);
           await getClaimQuota(data.project.claim_address);
-          if (data.project.nft_address) {
+         if (data.project.nft_address) {
             await getNftInfoByOwner(data.project.nft_address, address);
-          }
+          } 
         }
       }
     } catch (err) {
@@ -475,7 +475,7 @@ export function StudentClaimComponent() {
           disabled={loading || !studentId}
           className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:bg-blue-300"
         >
-          {loading ? '加载中...' : '查询claim项目信息'}
+          {loading ? '加载中...' : '查询最新claim项目信息'}
         </button>
         {error && <p className="text-red-500 mt-2">{error}</p>}
       </div>
