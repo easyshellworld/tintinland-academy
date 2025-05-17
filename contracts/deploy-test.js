@@ -54,6 +54,7 @@ async function deploy(name, args) {
 
 async function main() {
   console.log('部署者地址:', account.address);
+  console.log("部署网络：",RPC_URL)
 
   // 依次部署各实现合约
   const whitelist = await deploy('Whitelist');

@@ -1,5 +1,7 @@
 # OneBlock-Academy
 
+![管理系统](./snapshots/1.gif)
+
 OneBlock-Academy 是一个基于现代Web3与区块链技术的在线学习与奖励平台，旨在为web3教育培训机构提供一站式的学员注册、课程管理、学习笔记、答题考试、成绩评估以及毕业奖励领取的完整解决方案。
 
 ## team
@@ -61,7 +63,8 @@ cp .env.example .env.local
 # NEXTAUTH_SECRET=a8f9b3c1d4e762509a3718652f4d8c56
 # NEXT_PUBLIC_ITEM_TITLE="Oneblock Academy"  #项目标题名
 # INITIAL_STUDENT_ID=1799          # 初始化学员编号
-# NEXT_PUBLIC_CLAIM_FACTORY=0x85d08E78856A6071c332D9C7a418679D6dED2265 生成claim的工厂合约，已部署在westend-asset-hub-eth
+# 生成claim的工厂合约，已部署在westend-asset-hub-eth，地址如下：
+#NEXT_PUBLIC_CLAIM_FACTORY=0x85d08E78856A6071c332D9C7a418679D6dED2265 
 
 # 需要在.env环境下（非.env.local环境,供应初始化数据库）
 # ADMIN_ADDRESS=初始化管理员钱包地址  
@@ -101,7 +104,7 @@ RPC_URL=https://westend-asset-hub-eth-rpc.polkadot.io
 
 # 本地测试环境测试：（需要在.env）
 PRIVATE_KEY=  # 私钥
-RPC_URL=http://127.0.0.1:8545
+RPC_URL=http:127.0.0.1:8545 #注意不要加//
 
 # 1.智能合约部署
 node ./contracts/deploy.js  #暂时为js，后期可能调整
@@ -110,12 +113,25 @@ node ./contracts/deploy.js  #暂时为js，后期可能调整
 node ./contracts/deploy-test.js  #暂时为js，后期可能调整 建议本地节点节点测试
 
 ```
+* **合约west-asset-hub部署**
+![合约west-asset-hub部署](./snapshots/deploy.PNG)
+* **合约本地部署测试**
+![合约本地测试1](./snapshots/deploy-test1.PNG)
+![合约本地测试2](./snapshots/deploy-test2.PNG)
+![合约本地测试3](./snapshots/deploy-test3.PNG)
 
-## 演示
-<video src="./snapshots/1.mp4" controls></video>
+
+
+## 系统演示
+![生成任务部分演示](./snapshots/5.gif)
+
+![学员claim演示](./snapshots/12.gif)
 
 演示地址:
 **[https://oneblock-academy.netlify.app](https://oneblock-academy.netlify.app)**
+
+[演示视频](./snapshots/1.mp4)
+
 
 ```
 
