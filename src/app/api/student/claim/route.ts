@@ -32,17 +32,28 @@ export async function POST(request: NextRequest) {
       // 将返回值断言为包含 has_claimed 字段的数组
       const history = getProjectsByStudentId(student_id) as Array<{ has_claimed: boolean }>;
       const claimed = history.some((record) => record.has_claimed);
-      if (claimed) {
-        return NextResponse.json({ projects: history });
-      }
       const latest = getLatestProject();
-      if (!latest) {
+      if (claimed) {
+        if (latest) {
+          return NextResponse.json({
+            projects: {
+              latest: latest,
+              history: history
+            }
+          });
+
+        }
+       // return NextResponse.json({ projects: history });
+
+      }
+
+     if(!latest) {
         return NextResponse.json(
           { error: 'No projects available' },
           { status: 404 }
         );
       }
-      return NextResponse.json({ project: latest });
+      return NextResponse.json({ project: { latest: latest } });
     }
 
     // 插入操作，需提供完整项目字段
