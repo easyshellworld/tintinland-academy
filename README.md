@@ -111,11 +111,14 @@ node ./contracts/deploy-test.js  #暂时为js，后期可能调整 建议本地�
 
 ```
 
-## 演示地址
-![管理页面](./snapshots/1.gif)
-```
+## 演示
+<video src="./snapshots/1.mp4" controls></video>
+
 演示地址:
-https://oneblock-academy.netlify.app
+**[https://oneblock-academy.netlify.app](https://oneblock-academy.netlify.app)**
+
+```
+
 
 演示所使用账户地址与密钥：
 管理员：  地址: 0x85E9D949b0897DAb7B3Cf8B29f46aCEa16aB3271, 
