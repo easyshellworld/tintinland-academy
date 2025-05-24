@@ -32,13 +32,13 @@ const publicClient = createPublicClient({
 });
 
 function loadAbi(name) {
-  const abiPath = path.resolve(__dirname, `artifacts-pvm/contracts/${name}.sol/${name}.json`);
+  const abiPath = path.resolve(__dirname, `artifacts/contracts/${name}.sol/${name}.json`);
   const json = JSON.parse(fs.readFileSync(abiPath, 'utf8'));
   return json.abi;
 }
 
 function loadBytecode(name) {
-  const bytecodePath = path.resolve(__dirname, `artifacts-pvm/contracts/${name}.sol/${name}.json`);
+  const bytecodePath = path.resolve(__dirname, `artifacts/contracts/${name}.sol/${name}.json`);
   const json = JSON.parse(fs.readFileSync(bytecodePath, 'utf8'));
   return '0x' + json.bytecode;
 }

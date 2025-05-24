@@ -5,32 +5,23 @@ import { metaMask, walletConnect } from 'wagmi/connectors'
 const projectId =process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID  || "Oneblock Academy" 
 // Asset‑Hub Westend Testnet
 const assetHubWestendTestnet: Chain = {
-  id: 420420421,
-  name: 'Asset‑Hub Westend Testnet',
- // network: 'asset-hub-westend-testnet',
+  id: 888888,
+  name: 'My ava Testnet',
+ // network: 'My ava Testnet',
   nativeCurrency: {
-    name: 'Westend DOT',
-    symbol: 'WND',
+    name: 'myava',
+    symbol: 'myava',
     decimals: 18,
   },
   rpcUrls: {
     default: {
-      http: ['https://westend-asset-hub-eth-rpc.polkadot.io'],
+      http: ['http://127.0.0.1:42829/ext/bc/Vv1L2e7PogfQ2n4wKs7dHv6f549bJQsdqNy5Fr8BVwegdu4fw/rpc'],
     },
     public: {
-      http: ['https://westend-asset-hub-eth-rpc.polkadot.io'],
+      http: ['http://127.0.0.1:42829/ext/bc/Vv1L2e7PogfQ2n4wKs7dHv6f549bJQsdqNy5Fr8BVwegdu4fw/rpc'],
     },
   },
-  blockExplorers: {
-    default: {
-      name: 'Blockscout',
-      url: 'https://blockscout-asset-hub.parity-chains-scw.parity.io',
-    },
-    blockscout: {
-      name: 'Blockscout',
-      url: 'https://blockscout-asset-hub.parity-chains-scw.parity.io',
-    },
-  },
+ 
   testnet: true,
 }
 

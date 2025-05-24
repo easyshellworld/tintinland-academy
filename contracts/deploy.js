@@ -11,7 +11,7 @@ const RPC_URL = process.env.RPC_URL;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 function loadContractData(name) {
-    const filePath = path.resolve(`contracts/artifacts-pvm/contracts/${name}.sol/${name}.json`);
+    const filePath = path.resolve(`contracts/artifacts/contracts/${name}.sol/${name}.json`);
     const json = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
     
