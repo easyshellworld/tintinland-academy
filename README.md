@@ -1,11 +1,135 @@
-# OneBlock-Academy
+# tintinland-Academy
 
-![管理系统](./snapshots/1.gif)
+![](./snapshots/1.PNG)
 
-OneBlock-Academy 是一个基于现代Web3与区块链技术的在线学习与奖励平台，旨在为web3教育培训机构提供一站式的学员注册、课程管理、学习笔记、答题考试、成绩评估以及毕业奖励领取的完整解决方案。
+tintinland-Academy 是一个基于现代Web3与区块链技术的在线学习与奖励平台，旨在为web3教育培训机构提供一站式的学员注册、课程管理、学习笔记、答题考试、成绩评估以及毕业奖励领取的完整解决方案。目前已完成对**Avalanche**的L1链进行适配，并进行本地部署。
 
-## team
-Alice 1593
+## 本地Avalanche L1的部署
+* 下载安装avalanche 
+```bash
+ curl -sSfL https://raw.githubusercontent.com/ava-labs/avalanche-cli/main/scripts/install.sh | sh -s
+```
+![](./snapshots/2.PNG)
+* 添加环境变量
+```bash
+export PATH=~/bin:$PATH >> .bashrc
+```
+* 创建本地L1
+```bash
+ avalanche blockchain create myava
+```
+![](./snapshots/3.PNG)
+* 部署本地L1
+```bash
+avalanche blockchain deploy myava
+```
+![](./snapshots/4.PNG)
+
+## 智能合约部署
+* hardhat环境下，修改一下配置：
+```
+import { HardhatUserConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-toolbox";
+import dotenv from 'dotenv';
+dotenv.config();
+
+const key = process.env.PRIVATE_KEY || "default";
+
+const config: HardhatUserConfig = {
+  solidity: {
+    version: "0.8.28",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200, 
+      },
+      metadata: {
+        bytecodeHash: "none",
+      },
+    },
+  },
+  networks: {
+    hardhat: {
+      chainId: 31337,
+    },
+    localhost: {
+      url: "http://127.0.0.1:8545",
+      chainId: 31337,
+    },
+    // 根据设定chainid与RPC, 此处为新增加的合约部署配置
+    myava: {
+      url: "http://127.0.0.1:42829/ext/bc/Vv1L2e7PogfQ2n4wKs7dHv6f549bJQsdqNy5Fr8BVwegdu4fw/rpc",
+      chainId: 888888, 
+      accounts: [key]
+    },
+    
+  },
+  
+};
+
+export default config;
+
+```
+* 通过原项目hardhat部署测试脚本进行合约部署。
+![](./snapshots/5.PNG)
+
+
+## Dapp项目安装与使用
+
+```bash
+# 1. 克隆仓库
+git clone https://github.com/easyshellworld/tintinland-academy.git
+cd tintinland-academy
+
+# 2. 安装 Node.js（推荐 LTS）
+nvm install --lts && nvm use --lts
+
+# 3. 安装依赖
+npm install
+
+# 4. 配置环境变量
+cp .env.example .env.local
+# 填写：
+# NEXTAUTH_SECRET=a8f9b3c1d4e762509a3718652f4d8c56
+# NEXT_PUBLIC_ITEM_TITLE="tintinland-academy"  #项目标题名
+# INITIAL_STUDENT_ID=1799          # 初始化学员编号
+# 生成claim的工厂合约(为部署上链合约)
+#NEXT_PUBLIC_CLAIM_FACTORY=0x2c56400203ccC8402cf185b26005316415dA9d2C
+
+# 需要在.env环境下（非.env.local环境,供应初始化数据库）
+# ADMIN_ADDRESS=初始化管理员钱包地址  
+
+# 5. 数据库初始化
+npm run db:init
+
+# 6. 启动开发服务器
+npm run dev
+# 打开 http://localhost:3000
+
+# 7.项目构建与运行
+npm run  build 
+npm run  start
+
+```
+
+## DAPP交互展示
+* 手动添加网络
+![](./snapshots/n6.PNG)
+![](./snapshots/n7.PNG)
+
+* 利用Dapp创建新的学员claim项目
+![](./snapshots/n8.PNG)
+![](./snapshots/n9.PNG)
+* 批量添加已筛选白名单学员钱包地址
+![](./snapshots/n10.PNG)
+* 向claim合约授权与转账，充入第三方ERC20合约的token
+![](./snapshots/n11.PNG)
+* 学员领取claim奖励
+![](./snapshots/n12.PNG)
+![](./snapshots/n13.PNG)
+![](./snapshots/n14.PNG)
+
+
 
 ## 开发背景
 
@@ -44,111 +168,8 @@ Alice 1593
    * 通过合约工厂定义毕业奖励领取流程
    * 学员完成所有模块后，调用智能合约领取链上奖励
 
-## 安装与使用
-
-```bash
-# 1. 克隆仓库
-git clone https://github.com/easyshellworld/OneBlock-Academy.git
-cd OneBlock-Academy
-
-# 2. 安装 Node.js（推荐 LTS）
-nvm install --lts && nvm use --lts
-
-# 3. 安装依赖
-npm install
-
-# 4. 配置环境变量
-cp .env.example .env.local
-# 填写：
-# NEXTAUTH_SECRET=a8f9b3c1d4e762509a3718652f4d8c56
-# NEXT_PUBLIC_ITEM_TITLE="Oneblock Academy"  #项目标题名
-# INITIAL_STUDENT_ID=1799          # 初始化学员编号
-# 生成claim的工厂合约，已部署在westend-asset-hub-eth，地址如下：
-#NEXT_PUBLIC_CLAIM_FACTORY=0x85d08E78856A6071c332D9C7a418679D6dED2265 
-
-# 需要在.env环境下（非.env.local环境,供应初始化数据库）
-# ADMIN_ADDRESS=初始化管理员钱包地址  
-
-# 5. 数据库初始化
-npm run db:init
-
-# 6. 启动开发服务器
-npm run dev
-# 打开 http://localhost:3000
-
-# 7.项目构建与运行
-npm run  build 
-npm run  start
-
-```
-
-## 智能合约部署与测试
-* 合约编译环境为：hardhat 2.22.19 + resolc + solc-linux-amd64-v0.8.28+commit.7893614a
-* 编译参数模板：
-   ```
-      optimizer: {
-        enabled: true,
-        mode: "z",
-		  fallback_to_optimizing_for_size: true,
-        parameters: "1",
-        runs: 400,
-      },
-      standardJson: true,
-   ```
-* 部署测试命令
-
-```bash
-# 部署环境参数：（需要在.env）
-PRIVATE_KEY=  # 私钥
-RPC_URL=https://westend-asset-hub-eth-rpc.polkadot.io
-
-# 本地测试环境测试：（需要在.env）
-PRIVATE_KEY=  # 私钥
-RPC_URL=http:127.0.0.1:8545 #注意不要加//
-
-# 1.智能合约部署
-node ./contracts/deploy.js  #暂时为js，后期可能调整
-
-# 2.智能合约测试
-node ./contracts/deploy-test.js  #暂时为js，后期可能调整 建议本地节点节点测试
-
-```
-* **合约west-asset-hub部署**
-![合约west-asset-hub部署](./snapshots/deploy.PNG)
-* **合约本地部署测试**
-![合约本地测试1](./snapshots/deploy-test1.PNG)
-![合约本地测试2](./snapshots/deploy-test2.PNG)
-![合约本地测试3](./snapshots/deploy-test3.PNG)
 
 
-
-## 系统演示
-![生成任务部分演示](./snapshots/5.gif)
-
-![学员claim演示](./snapshots/12.gif)
-
-演示地址:
-**[https://oneblock-academy.netlify.app](https://oneblock-academy.netlify.app)**
-
-[演示视频](./snapshots/1.mp4)
-
-
-```
-
-
-演示所使用账户地址与密钥：
-管理员：  地址: 0x85E9D949b0897DAb7B3Cf8B29f46aCEa16aB3271, 
-         私钥: 0x6200be1ec8844cde8564b0468b91dc64b08a957755b8ec22e1af1527c0098432
-老师:    地址: 0xe7788133f4b99876498866e7E53dE4C4a2b90113, 
-         私钥: 0xd55a8a17d8721d6162ee025a955625e17dc11c56802d2b930d68607699cf7492
-助教：   地址: 0x1f8665788d7973CB8797A097E85f7d4f4a3892AB, 
-         私钥: 0xe5a3ab6fba6a2cb0eba373a7b1127d784d16590985f3349a27d65be95e925994
-学员：   地址: 0x3FD810bB2729a838e942F7C3a4be63973B210aF8, （审核状态：一二）
-        私钥: 0xfa69f8b57066e48715fe3f926bd32e1e6990f854f31dd533aab31df564280d40
-        地址: 0x58ae1A14EFCc975BD395728F16B128B0497431E4, （完成注册批准状态：胖一二）
-        私钥: 0x4fdb9840f5fc3b82184b5e80b442b55c3512dc8c536abfcb652744885c1b651d
-
-```
 
 
 
@@ -168,10 +189,5 @@ node ./contracts/deploy-test.js  #暂时为js，后期可能调整 建议本地�
 └── package.json
 ```
 
-## 联系方式
-
-如有问题或建议，请通过 GitHub 提交 Issue，或在组织内部协作平台联系项目维护者。
-
----
 
 
