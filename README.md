@@ -95,6 +95,8 @@ cp .env.example .env.local
 # INITIAL_STUDENT_ID=1799          # 初始化学员编号
 # 生成claim的工厂合约(为部署上链合约)
 #NEXT_PUBLIC_CLAIM_FACTORY=0xE5967bD2f18dC73ABe81DDA1f4305B8379809C6e
+实际地址：
+#NEXT_PUBLIC_CLAIM_FACTORY=0x2c56400203ccC8402cf185b26005316415dA9d2C
 
 # 需要在.env环境下（非.env.local环境,供应初始化数据库）
 # ADMIN_ADDRESS=初始化管理员钱包地址  
